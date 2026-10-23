@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0F0C">
+  <title>Tap Nova Invitaciones — Crea tu invitación digital</title>
+  <meta name="description" content="Elige una plantilla, escribe los datos de tu evento y crea tu invitación digital en minutos.">
+
+  <!-- Tipografías (Google Fonts). Si no cargan, el sitio usa letras del sistema y sigue funcionando. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Fredoka:wght@400;500;600;700&family=Jost:wght@400;500&display=swap">
+
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/templates.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="#/" aria-label="Tap Nova Invitaciones, ir al inicio">
+        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="#16D678" stroke-width="2.6" stroke-linecap="round">
+          <path d="M6 16a10 10 0 0 1 10-10"/>
+          <path d="M26 16a10 10 0 0 1-10 10"/>
+          <circle cx="16" cy="16" r="3.6" fill="#16D678" stroke="none"/>
+        </svg>
+        <span>Tap Nova <small>Invitaciones</small></span>
+      </a>
+      <span class="topbar-note">por Tap Nova Studio</span>
+    </div>
+  </header>
+
+  <main id="app">
+    <noscript><p class="wrap" style="padding:40px 0">Necesitas activar JavaScript para crear tu invitación.</p></noscript>
+  </main>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <!-- El orden importa: primero los datos, luego guardado, dibujo y por último la app. -->
+  <script src="js/catalog.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
