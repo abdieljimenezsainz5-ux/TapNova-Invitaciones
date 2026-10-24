@@ -10,7 +10,7 @@
   <!-- Tipografías (Google Fonts). Si no cargan, el sitio usa letras del sistema y sigue funcionando. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500;600&family=Great+Vibes&family=Dancing+Script:wght@600;700&family=Creepster&display=swap">
 
   <style>
 /*
@@ -48,16 +48,6 @@ button { font-family: inherit; letter-spacing: inherit; }
 :focus-visible { outline: 3px solid rgba(10, 132, 255, .55); outline-offset: 2px; }
 .wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
 
-/* ---------- Barra superior (cristal) ---------- */
-.topbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, .72); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
-.topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 52px; }
-.brand { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; font-weight: 700; font-size: 17px; letter-spacing: -.02em; }
-.brand svg { width: 26px; height: 26px; }
-.brand small { font-weight: 500; font-size: 15px; color: var(--gray); }
-.topbar-note { font-size: 13px; color: var(--gray); }
-@media (max-width: 560px) { .topbar-note { display: none; } }
-body.is-editor .topbar { display: none; }
-
 /* ---------- Botones ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 26px; border: 0; border-radius: 999px; font-size: 17px; font-weight: 600; text-decoration: none; cursor: pointer; background: var(--fill); color: var(--ink); transition: transform .25s var(--spring), box-shadow .25s var(--spring), background .2s; -webkit-tap-highlight-color: transparent; }
 .btn:active { transform: scale(.96); }
@@ -70,7 +60,7 @@ body.is-editor .topbar { display: none; }
 .btn-danger { color: var(--danger); }
 
 /* ---------- Portada ---------- */
-.hero { position: relative; overflow: hidden; text-align: center; padding: 64px 0 0; background: #fff; }
+.hero { position: relative; overflow: hidden; text-align: center; padding: calc(56px + env(safe-area-inset-top)) 0 0; background: #fff; }
 .blobs { position: absolute; inset: 0; pointer-events: none; }
 .blobs i { position: absolute; border-radius: 50%; filter: blur(64px); opacity: .5; animation: drift 14s ease-in-out infinite alternate; }
 .blobs i:nth-child(1) { width: 340px; height: 340px; left: -80px; top: -60px; background: var(--pink); }
@@ -148,7 +138,8 @@ body.is-editor .topbar { display: none; }
 .nav-title small { font-size: 12px; color: var(--gray); }
 .nav-save { justify-self: end; min-height: 44px; padding: 0 4px; border: 0; background: none; font-size: 17px; font-weight: 600; color: var(--blue); cursor: pointer; }
 .editor { padding-top: 52px; }
-.editor-grid { width: min(1180px, 100% - 32px); margin: 20px auto 130px; display: grid; gap: 16px; }
+.editor-grid { width: min(1180px, 100% - 32px); margin: 20px auto 130px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.editor-grid > * { min-width: 0; }
 
 .group { background: var(--card); border-radius: 28px; padding: 22px 20px 8px; margin-bottom: 16px; box-shadow: 0 2px 14px rgba(0, 0, 0, .04); }
 .group > h3 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); margin-bottom: 16px; }
@@ -196,7 +187,7 @@ body.is-editor .topbar { display: none; }
   .editor[data-tab] .form, .editor[data-tab] .preview { display: block; }
   .tabs { display: none; }
   .preview { position: sticky; top: 76px; }
-  .phone { width: 372px; height: min(780px, calc(100vh - 170px)); border: 11px solid #1D1D1F; border-radius: 52px; background: #1D1D1F; }
+  .phone { width: 372px; height: min(780px, calc(100vh - 290px)); border: 11px solid #1D1D1F; border-radius: 52px; background: #1D1D1F; }
   .phone::before { content: ''; position: absolute; top: 9px; left: 50%; width: 92px; height: 26px; margin-left: -46px; border-radius: 99px; background: #000; z-index: 5; }
   .phone-screen { height: 100%; overflow-y: auto; scrollbar-width: none; border-radius: 40px; }
   .phone-screen::-webkit-scrollbar { display: none; }
@@ -216,6 +207,43 @@ body.is-editor .topbar { display: none; }
 
 .preview-head .btn { flex: none; white-space: nowrap; }
 .tabs button { white-space: nowrap; }
+
+
+/* ---------- Stickers (bandeja y herramientas) ---------- */
+.dock { background: #fff; border-radius: 24px; padding: 12px 12px 10px; margin-bottom: 14px; box-shadow: 0 2px 14px rgba(0, 0, 0, .05); }
+.dock-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 4px 8px; }
+.dock-title span { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); }
+.dock-title small { font-size: 13px; color: var(--gray); text-align: right; }
+.tray { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 6px; scrollbar-width: none; }
+.tray::-webkit-scrollbar { display: none; }
+.tray button { flex: none; width: 48px; height: 48px; border: 0; border-radius: 15px; background: var(--fill); font-size: 26px; line-height: 1; cursor: pointer; transition: transform .25s var(--spring), background .2s; }
+.tray button:hover { background: #E8E8ED; }
+.tray button:active { transform: scale(.85); }
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; padding: 10px 2px 0; border-top: 1px solid var(--line); }
+.tools[hidden] { display: none; }
+.tools .btn { min-height: 38px; min-width: 44px; padding: 0 14px; font-size: 18px; }
+.tools .btn-danger { font-size: 15px; margin-left: auto; }
+
+/* ---------- Hoja de publicación (pago) ---------- */
+.sheet-back { position: fixed; inset: 0; z-index: 90; display: flex; align-items: flex-end; justify-content: center; background: rgba(0, 0, 0, .4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: sheet-fade .25s ease; }
+.sheet { width: min(520px, 100%); max-height: 92vh; overflow-y: auto; background: #fff; border-radius: 30px 30px 0 0; padding: 26px 22px calc(26px + env(safe-area-inset-bottom)); animation: sheet-up .5s var(--spring); }
+@media (min-width: 700px) { .sheet-back { align-items: center; } .sheet { border-radius: 30px; } }
+@keyframes sheet-fade { from { opacity: 0; } }
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } }
+.sheet h2 { font-size: 28px; font-weight: 800; letter-spacing: -.035em; }
+.sheet .sub { margin-top: 4px; color: var(--gray); font-size: 16px; }
+.price { margin: 18px 0 6px; padding: 16px 18px; border-radius: 20px; background: var(--fill); display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.price span { color: var(--gray); font-size: 15px; }
+.price strong { font-size: 28px; font-weight: 800; letter-spacing: -.03em; }
+.price em { font-style: normal; font-size: 15px; color: var(--gray); }
+.psteps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 14px; counter-reset: p; }
+.psteps li { counter-increment: p; position: relative; padding: 0 0 0 46px; }
+.psteps li::before { content: counter(p); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: #fff; font-weight: 700; font-size: 15px; }
+.psteps strong { display: block; font-size: 17px; }
+.psteps p { margin-top: 2px; font-size: 15px; color: var(--gray); line-height: 1.4; }
+.psteps .btn { margin-top: 10px; }
+.sheet .notice { font-size: 14px; }
+.sheet-close { margin-top: 18px; }
 
 </style>
   <style>
@@ -239,7 +267,7 @@ body.is-editor .topbar { display: none; }
 .inv-hero { position: relative; padding: 46px 28px 30px; }
 .inv-deco { position: absolute; inset: 0; pointer-events: none; }
 .inv-hero > * { position: relative; }
-.inv-hero > .inv-deco, .inv-hero > .inv-floaters { position: absolute; }
+.inv-hero > .inv-deco, .inv-hero > .inv-floaters, .inv-hero > .inv-stickers { position: absolute; }
 .inv-kicker { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
 .inv-photo { width: 210px; height: 210px; margin: 0 auto 24px; overflow: hidden; background: var(--paper); cursor: pointer; -webkit-tap-highlight-color: transparent;
   transform: perspective(700px) rotate(var(--rot, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease; }
@@ -281,7 +309,7 @@ body.is-editor .topbar { display: none; }
 
 /* Entrada suave (solo cuando la invitación se "abre", no mientras se edita) */
 .inv-live .inv-hero > * { animation: inv-rise .8s cubic-bezier(.2,.8,.2,1) backwards; }
-.inv-live .inv-hero > .inv-deco, .inv-live .inv-hero > .inv-floaters { animation: none; }
+.inv-live .inv-hero > .inv-deco, .inv-live .inv-hero > .inv-floaters, .inv-live .inv-hero > .inv-stickers { animation: none; }
 .inv-live .inv-hero > .inv-photo { animation-delay: .1s; }
 .inv-live .inv-hero > .inv-names { animation-delay: .2s; }
 .inv-live .inv-hero > .inv-motive { animation-delay: .3s; }
@@ -489,22 +517,151 @@ body.is-editor .topbar { display: none; }
 .tpl-lino .inv-btn { border-radius: 0; background: transparent; color: var(--ink); border: 1px solid var(--ink); font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; padding: 15px 30px; }
 .tpl-lino .inv-btn-main { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
 
+
+/* =====================================================
+   STICKERS (se agregan y se arrastran en el editor)
+   Estilo "troquelado": borde blanco alrededor, como un sticker de papel.
+   ===================================================== */
+.inv-stickers { inset: 0; z-index: 5; pointer-events: none; }
+.inv-st { position: absolute; left: 50%; top: 50%; font-size: var(--ss, 56px); line-height: 1; translate: -50% -50%; rotate: var(--sr, 0deg);
+  pointer-events: auto; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(0 6px 5px rgba(0,0,0,.28)); }
+.inv-edit .inv-st { cursor: grab; touch-action: none; }
+.inv-edit .inv-st:active { cursor: grabbing; }
+.inv-st.sel { outline: 2px dashed var(--accent); outline-offset: 6px; border-radius: 12px; }
+.inv-st.bounce { animation: inv-bounce .55s ease; }
+@keyframes inv-bounce { 0% { transform: scale(1); } 35% { transform: scale(1.4) rotate(-10deg); } 70% { transform: scale(.92) rotate(6deg); } 100% { transform: scale(1); } }
+.thumb .inv-st { transition: none; }
+
+.inv-age { position: relative; }
+.inv-photo-none { display: none; }
+
+/* =====================================================
+   Baby Shower Granja — cuadros vichy y tarjeta en arco
+   ===================================================== */
+.tpl-granja { font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; }
+.tpl-granja .inv-hero { min-height: 740px; padding: 126px 58px 220px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--pop-1) 62%, transparent) 0 40px, transparent 40px 80px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--pop-2) 58%, transparent) 0 40px, transparent 40px 80px),
+    #FBF9F4; }
+.tpl-granja .inv-hero::before { content: ''; position: absolute; left: 24px; right: 24px; top: 70px; bottom: 96px; background: var(--paper);
+  border-radius: 999px 999px 26px 26px; box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 38%, white), 0 22px 40px rgba(60, 40, 20, .18); }
+.tpl-granja .inv-deco { display: none; }
+.tpl-granja .inv-kicker { font-size: 12px; letter-spacing: .32em; color: var(--accent); margin-bottom: 14px; font-weight: 500; }
+.tpl-granja .inv-photo { width: 124px; height: 124px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 8px 16px rgba(0,0,0,.18); margin-bottom: 14px; }
+.tpl-granja .inv-names { font-family: 'Great Vibes', 'Brush Script MT', cursive; font-size: 56px; font-weight: 400; line-height: 1; color: var(--ink); margin-bottom: 8px; }
+.tpl-granja .inv-motive { font-size: 14px; letter-spacing: .34em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.tpl-granja .inv-message p { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-style: italic; line-height: 1.45; color: var(--ink); }
+.tpl-granja .inv-details { gap: 12px; padding: 18px 26px; }
+.tpl-granja .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 22px; border-left: 8px solid var(--accent); box-shadow: 0 6px 16px rgba(60,40,20,.08); }
+.tpl-granja .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: color-mix(in srgb, var(--pop-1) 40%, white); }
+.tpl-granja .inv-detail strong { font-size: 19px; font-weight: 500; margin-top: 2px; }
+.tpl-granja .inv-count > div { background: var(--paper); border-radius: 18px; box-shadow: 0 6px 16px rgba(60,40,20,.08); border-bottom: 5px solid var(--accent); }
+.tpl-granja .inv-count b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: var(--accent); }
+.tpl-granja .inv-address { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; }
+.tpl-granja .inv-btn { border-radius: 999px; font-weight: 600; box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 60%, black); }
+.tpl-granja .inv-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 60%, black); }
+
+/* =====================================================
+   Cóctel Rosa — rayas verdes y tarjeta rosa troquelada
+   ===================================================== */
+.tpl-coctel { font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; }
+.tpl-coctel .inv-hero { min-height: 700px; padding: 140px 62px 200px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  background: repeating-linear-gradient(90deg, var(--pop-1) 0 22px, var(--bg) 22px 44px); }
+.tpl-coctel .inv-hero::before { content: ''; position: absolute; left: 26px; right: 26px; top: 64px; bottom: 90px; background: var(--pop-2); border-radius: 46px;
+  box-shadow: 0 0 0 7px #fff, 0 22px 40px rgba(60,30,40,.25); }
+.tpl-coctel .inv-hero::after { content: ''; position: absolute; left: 40px; right: 40px; top: 78px; bottom: 104px; border: 2px dashed rgba(255,255,255,.75); border-radius: 36px; pointer-events: none; }
+.tpl-coctel .inv-deco { display: none; }
+.tpl-coctel .inv-kicker { font-size: 11px; letter-spacing: .34em; color: var(--accent); margin-bottom: 10px; font-weight: 500; }
+.tpl-coctel .inv-photo { width: 120px; height: 120px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 8px 16px rgba(0,0,0,.2); margin-bottom: 14px; }
+.tpl-coctel .inv-names { font-family: 'Great Vibes', 'Brush Script MT', cursive; font-size: 56px; overflow-wrap: break-word; font-weight: 400; line-height: .95; color: var(--ink); margin-bottom: 6px; }
+.tpl-coctel .inv-motive { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: .3em; text-transform: uppercase; color: var(--ink); font-weight: 500; }
+.tpl-coctel .inv-age { margin-top: 8px; font-family: 'Great Vibes', cursive; font-size: 76px; line-height: 1; color: var(--accent-2); }
+.tpl-coctel .inv-message p { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-style: italic; line-height: 1.45; }
+.tpl-coctel .inv-details { gap: 12px; padding: 18px 26px; }
+.tpl-coctel .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 26px; box-shadow: 0 0 0 4px var(--pop-2), 0 8px 18px rgba(60,30,40,.12); }
+.tpl-coctel .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: var(--pop-2); }
+.tpl-coctel .inv-detail strong { font-size: 19px; font-weight: 500; margin-top: 2px; }
+.tpl-coctel .inv-count > div { background: var(--pop-2); border-radius: 18px; box-shadow: 0 0 0 3px #fff, 0 6px 14px rgba(60,30,40,.15); }
+.tpl-coctel .inv-count b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: var(--ink); }
+.tpl-coctel .inv-count span { color: var(--ink); opacity: .7; }
+.tpl-coctel .inv-address { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; }
+.tpl-coctel .inv-btn { border-radius: 999px; font-weight: 600; letter-spacing: .04em; box-shadow: 0 0 0 4px #fff, 0 8px 18px rgba(60,30,40,.25); }
+
+/* =====================================================
+   Collage Rosa — nombre con letras recortadas, estilo scrapbook
+   ===================================================== */
+.tpl-collage { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif; }
+.tpl-collage .inv-hero { min-height: 760px; padding: 110px 18px 70px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 26px, transparent 26px 52px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.6) 0 26px, transparent 26px 52px),
+    var(--pop-2); }
+.tpl-collage .inv-hero::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 56%;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 16px, color-mix(in srgb, var(--accent) 38%, white) 16px 32px);
+  clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%); }
+.tpl-collage .inv-deco { display: none; }
+.tpl-collage .inv-kicker { order: 1; display: inline-block; padding: 6px 16px; border-radius: 10px; background: #fff; color: var(--accent); font-weight: 600; letter-spacing: .14em; transform: rotate(-3deg); margin-bottom: 16px; box-shadow: 0 5px 10px rgba(0,0,0,.18); }
+.tpl-collage .inv-names { order: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 3px; margin: 0 0 10px; cursor: pointer; }
+.tpl-collage .l { display: inline-grid; place-items: center; min-width: .78em; padding: .02em .1em; font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 54px; font-weight: 800; line-height: 1.05;
+  background: #fff; color: var(--accent); box-shadow: 0 0 0 3px #fff, 0 7px 10px rgba(0,0,0,.22); transform: rotate(var(--lr, 0deg)); }
+.tpl-collage .l:nth-child(4n+1) { --lr: -5deg; }
+.tpl-collage .l:nth-child(4n+2) { --lr: 4deg; background: var(--accent); color: #fff; }
+.tpl-collage .l:nth-child(4n+3) { --lr: -3deg; background: var(--accent-2); color: var(--ink); font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 60px; }
+.tpl-collage .l:nth-child(4n) { --lr: 6deg; background: var(--pop-1); color: #fff; }
+.tpl-collage .l:nth-child(5n+2) { border-radius: 14px; }
+.tpl-collage .sp { width: 14px; }
+.tpl-collage .inv-motive { order: 3; font-family: 'Dancing Script', 'Brush Script MT', cursive; font-size: 34px; font-weight: 700; color: var(--accent); background: #fff; padding: 0 16px; border-radius: 12px; transform: rotate(-2deg); box-shadow: 0 6px 12px rgba(0,0,0,.18); }
+.tpl-collage .inv-age { order: 4; margin-top: 8px; font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 150px; font-weight: 800; line-height: 1; color: transparent;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 30%, color-mix(in srgb, var(--accent) 45%, white) 52%, #fff 66%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 10px 8px rgba(0,0,0,.25)); }
+.tpl-collage .inv-photo { order: 5; align-self: flex-end; width: 150px; height: 180px; margin: -30px 16px 0 0; border: 6px solid #fff; border-radius: 22px; transform: rotate(5deg); box-shadow: 0 10px 18px rgba(0,0,0,.25); }
+.tpl-collage .inv-block { padding-inline: 24px; }
+.tpl-collage .inv-message p { padding: 20px; border-radius: 26px; background: var(--paper); font-size: 18px; box-shadow: 0 6px 0 var(--accent-2); }
+.tpl-collage .inv-details { gap: 12px; }
+.tpl-collage .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 22px; box-shadow: 0 6px 0 var(--accent); }
+.tpl-collage .inv-detail:nth-child(2) { box-shadow: 0 6px 0 var(--pop-1); }
+.tpl-collage .inv-detail:nth-child(3) { box-shadow: 0 6px 0 var(--accent-2); }
+.tpl-collage .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: color-mix(in srgb, var(--accent) 16%, white); }
+.tpl-collage .inv-detail strong { font-size: 19px; font-weight: 600; margin-top: 2px; }
+.tpl-collage .inv-count > div { border-radius: 18px; background: var(--paper); box-shadow: 0 5px 0 var(--accent-2); }
+.tpl-collage .inv-count b { font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent); }
+.tpl-collage .inv-btn { border-radius: 999px; font-family: 'Baloo 2', sans-serif; font-size: 19px; font-weight: 700; box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 55%, black); }
+.tpl-collage .inv-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 55%, black); }
+
+/* =====================================================
+   Noche de Halloween — luna, telarañas y brillo naranja
+   ===================================================== */
+.tpl-halloween { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  background: radial-gradient(ellipse 90% 40% at 50% 0, color-mix(in srgb, var(--pop-1) 38%, var(--bg)) 0%, var(--bg) 70%); }
+.tpl-halloween .inv-hero { min-height: 700px; padding: 90px 24px 190px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+.tpl-halloween .inv-deco {
+  background:
+    radial-gradient(circle 36px at 85% 10%, #FFF1BD 0 96%, transparent 100%),
+    radial-gradient(circle 110px at 85% 10%, rgba(255, 220, 130, .30), transparent 72%),
+    radial-gradient(ellipse 120% 34% at 50% 100%, color-mix(in srgb, var(--pop-1) 45%, transparent), transparent 72%);
+}
+.tpl-halloween .inv-kicker { display: inline-block; padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--accent); color: var(--accent); letter-spacing: .16em; font-weight: 600; margin-bottom: 20px; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.tpl-halloween .inv-photo { width: 190px; height: 230px; border-radius: 95px 95px 12px 12px; border: 4px solid var(--accent); box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 60%, transparent); margin-bottom: 24px; }
+.tpl-halloween .inv-names { font-family: 'Creepster', 'Fredoka', system-ui, sans-serif; font-size: 66px; font-weight: 400; letter-spacing: .02em; line-height: 1; color: var(--accent);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--accent) 75%, transparent), 3px 3px 0 #000; margin-bottom: 12px; }
+.tpl-halloween .inv-motive { font-size: 22px; font-weight: 600; color: var(--ink); }
+.tpl-halloween .inv-message p { padding: 22px 20px; border-radius: 26px; font-size: 18px; background: color-mix(in srgb, #fff 7%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.tpl-halloween .inv-details { gap: 12px; padding: 18px 26px; }
+.tpl-halloween .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 22px; border-left: 6px solid var(--accent); box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 18%, transparent); }
+.tpl-halloween .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.tpl-halloween .inv-label { color: var(--muted); font-weight: 600; }
+.tpl-halloween .inv-detail strong { font-size: 19px; font-weight: 600; margin-top: 2px; }
+.tpl-halloween .inv-count > div { border-radius: 18px; background: var(--paper); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.tpl-halloween .inv-count b { font-family: 'Creepster', 'Fredoka', sans-serif; font-size: 38px; font-weight: 400; color: var(--accent); text-shadow: 0 0 16px color-mix(in srgb, var(--accent) 80%, transparent); }
+.tpl-halloween .inv-btn { border-radius: 999px; font-family: 'Creepster', 'Fredoka', sans-serif; font-size: 23px; font-weight: 400; letter-spacing: .05em; padding: 12px 34px; box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 65%, transparent); }
+.tpl-halloween .inv-btn-main { animation: inv-pulse 2.4s ease-in-out infinite; }
+.tpl-halloween .inv-float { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 60%, transparent)); }
+
 </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="wrap">
-      <a class="brand" href="#/" aria-label="Tap Nova Invitaciones, ir al inicio">
-        <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke-width="3" stroke-linecap="round">
-          <path d="M6 16a10 10 0 0 1 10-10" stroke="#FF4F8B"/>
-          <path d="M26 16a10 10 0 0 1-10 10" stroke="#2FB8F0"/>
-          <circle cx="16" cy="16" r="3.8" fill="#FFC83D" stroke="none"/>
-        </svg>
-        <span>Tap Nova <small>Invitaciones</small></span>
-      </a>
-      <span class="topbar-note">por Tap Nova Studio</span>
-    </div>
-  </header>
 
   <main id="app">
     <noscript><p class="wrap" style="padding:40px 0">Necesitas activar JavaScript para crear tu invitación.</p></noscript>
@@ -515,25 +672,52 @@ body.is-editor .topbar { display: none; }
   <!-- El orden importa: primero los datos, luego guardado, dibujo y por último la app. -->
   <script>
 /*
+ * config.js — Datos del negocio. ESTE es el archivo que tú editas.
+ *
+ *   whatsapp : el WhatsApp de Tap Nova donde te llegarán los pedidos (10 dígitos).
+ *   price    : precio por invitación publicada (número, ej. 199). Si lo dejas en null,
+ *              la pantalla dirá "precio por confirmar".
+ *   currency : moneda, normalmente 'MXN'.
+ *   payUrl   : enlace de pago (ej. un "Link de pago" de Mercado Pago o Stripe). Si está
+ *              vacío, se muestran las instrucciones de payNote.
+ *   payNote  : texto con tus datos de pago (ej. "Transferencia a CLABE ... a nombre de ...").
+ */
+(function (global) {
+  'use strict';
+  global.TapNova = global.TapNova || {};
+  global.TapNova.Config = {
+    studioName: 'Tap Nova Studio',
+    whatsapp: '',
+    price: null,
+    currency: 'MXN',
+    payUrl: '',
+    payNote: ''
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/*
  * catalog.js — Catálogo de categorías, campos y plantillas.
  *
  * Aquí SOLO hay datos (la "definición" de cada plantilla). Los datos de cada
- * invitación real (nombre, fecha, foto...) viven aparte, en storage.js.
+ * invitación real (nombre, fecha, foto, stickers...) viven aparte, en storage.js.
  *
  * Para agregar una plantilla nueva:
- *   1. Copia un bloque de TEMPLATES y cambia id, nombre, categoría, textos, paletas y "floaters".
- *   2. Si quieres un diseño distinto, usa un "layout" nuevo y agrega sus estilos
+ *   1. Copia un bloque de TEMPLATES y cambia id, nombre, categoría, textos, paletas.
+ *   2. "stickers" = los stickers que se ofrecen en el editor.
+ *      "startStickers" = los que ya vienen puestos (x, y en % de la portada; s tamaño; r giro).
+ *      "floaters" = adornos que flotan solos en la portada.
+ *   3. Si quieres un diseño distinto, usa un "layout" nuevo y agrega sus estilos
  *      en css/templates.css (solo CSS, no hay que tocar el código JavaScript).
  * Para agregar una categoría nueva: añade una línea a CATEGORIES.
- *
- * "floaters" = adornos que flotan en la portada (globos, animalitos...). Al
- * tocarlos se revientan y sueltan confeti.
  */
 (function (global) {
   'use strict';
 
   const CATEGORIES = [
     { id: 'infantil', name: 'Cumpleaños infantiles' },
+    { id: 'halloween', name: 'Halloween' },
     { id: 'adultos', name: 'Cumpleaños de adultos' },
     { id: 'xv', name: 'XV años' },
     { id: 'boda', name: 'Bodas' },
@@ -547,6 +731,7 @@ body.is-editor .topbar { display: none; }
   const FIELDS = {
     names: { type: 'text', label: 'Nombre(s)', max: 60 },
     motive: { type: 'text', label: 'Edad o motivo del evento', max: 50 },
+    age: { type: 'text', label: 'Número grande (edad)', max: 3, placeholder: '20', hint: 'Opcional. Se muestra en grande en esta plantilla.' },
     date: { type: 'date', label: 'Fecha' },
     time: { type: 'time', label: 'Hora' },
     venue: { type: 'text', label: 'Nombre del lugar', max: 60 },
@@ -574,6 +759,9 @@ body.is-editor .topbar { display: none; }
     }
   };
 
+  // Stickers que se ofrecen en todas las plantillas (después de los propios de cada una).
+  const GENERAL_STICKERS = ['⭐', '❤️', '🎈', '🎉', '✨', '🎀', '🌈', '🦋', '🌸', '🎁'];
+
   function inDays(n) {
     const d = new Date();
     d.setDate(d.getDate() + n);
@@ -581,11 +769,22 @@ body.is-editor .topbar { display: none; }
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
   }
 
+  // Próximo 31 de octubre (este año si aún no pasa, si no el siguiente).
+  function nextHalloween() {
+    const n = new Date();
+    let y = n.getFullYear();
+    if (new Date(y, 9, 31, 23, 59).getTime() < n.getTime()) y++;
+    return y + '-10-31';
+  }
+
   // Mismos campos para todas las plantillas de hoy; cada una cambia etiquetas y ejemplos.
-  function standardFields(namesLabel, namesPh, motivePh, venuePh) {
-    return [
+  function standardFields(namesLabel, namesPh, motivePh, venuePh, withAge) {
+    const list = [
       { key: 'names', label: namesLabel, placeholder: namesPh },
-      { key: 'motive', placeholder: motivePh },
+      { key: 'motive', placeholder: motivePh }
+    ];
+    if (withAge) list.push({ key: 'age' });
+    return list.concat([
       { key: 'photo' },
       { key: 'date' },
       { key: 'time' },
@@ -595,24 +794,190 @@ body.is-editor .topbar { display: none; }
       { key: 'message' },
       { key: 'whatsapp' },
       { key: 'rsvpText' }
-    ];
+    ]);
   }
 
   const SECTIONS_STD = ['hero', 'message', 'details', 'countdown', 'location', 'rsvp'];
 
   // Variables de color de cada paleta:
   // --bg fondo · --paper tarjetas · --ink texto · --muted texto suave · --accent color principal
-  // --accent-ink texto sobre el color principal · --accent-2 secundario · --pop-1/--pop-2 colores extra de fiesta
+  // --accent-ink texto sobre el color principal · --accent-2 secundario · --pop-1/--pop-2 colores extra
   const TEMPLATES = [
+    /* ---------- Estilo "papel troquelado" (como las invitaciones físicas) ---------- */
+    {
+      id: 'baby-granja',
+      name: 'Baby Shower Granja',
+      category: 'babyshower',
+      cover: null,
+      layout: 'granja',
+      kicker: 'Te invitamos a',
+      photoOptional: true,
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['☀️', '☁️', '🚜', '🐴', '🐮', '🐷', '🐑', '🤠', '🌾', '🍼', '🧸', '👶', '🐔', '🥕'],
+      startStickers: [
+        { e: '☁️', x: 70, y: 8, s: 76, r: 0 },
+        { e: '☀️', x: 83, y: 5, s: 52, r: 0 },
+        { e: '🎈', x: 24, y: 50, s: 44, r: -10 },
+        { e: '🚜', x: 24, y: 89, s: 96, r: 0 },
+        { e: '🐴', x: 52, y: 93, s: 56, r: 0 },
+        { e: '🤠', x: 72, y: 80, s: 64, r: 4 },
+        { e: '🐮', x: 83, y: 92, s: 58, r: 0 }
+      ],
+      fields: standardFields('Nombre del festejado o de los papás', 'Luis Orlando', 'Mi baby shower', 'Salón Los Girasoles'),
+      palettes: [
+        { id: 'azul', name: 'Azul', vars: { '--bg': '#EDF1F5', '--paper': '#FFFFFF', '--ink': '#5A3E2B', '--muted': '#8A7B6E', '--accent': '#5F88AE', '--accent-ink': '#FFFFFF', '--accent-2': '#D9C7A6', '--pop-1': '#A9C0D6', '--pop-2': '#CDBB9A' } },
+        { id: 'rosa', name: 'Rosa', vars: { '--bg': '#F9EEF0', '--paper': '#FFFFFF', '--ink': '#5A3A3A', '--muted': '#8F7474', '--accent': '#C9748B', '--accent-ink': '#FFFFFF', '--accent-2': '#E6C9A5', '--pop-1': '#F0B9C6', '--pop-2': '#D9C2A0' } },
+        { id: 'menta', name: 'Menta', vars: { '--bg': '#EAF3EE', '--paper': '#FFFFFF', '--ink': '#46422E', '--muted': '#7C806C', '--accent': '#5E9B80', '--accent-ink': '#FFFFFF', '--accent-2': '#E0CFA2', '--pop-1': '#A8CFBC', '--pop-2': '#D5C79B' } }
+      ],
+      defaults: () => ({
+        names: 'Luis Orlando',
+        motive: 'Mi baby shower',
+        photo: '',
+        date: inDays(30),
+        time: '16:00',
+        venue: 'Salón Los Girasoles',
+        address: 'Calle Girasol 210, Col. Jardines',
+        mapsUrl: '',
+        message: 'Estamos muy felices de compartir la llegada de nuestro pequeño vaquero. ¡Acompáñanos a celebrarlo!',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia al baby shower 🤠'
+      })
+    },
+
+    {
+      id: 'coctel-rosa',
+      name: 'Cóctel Rosa',
+      category: 'adultos',
+      cover: null,
+      layout: 'coctel',
+      kicker: 'Celebra conmigo',
+      photoOptional: true,
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['🍸', '🫒', '🍾', '🥂', '💸', '💵', '🎀', '🌟', '💅', '👠', '💄', '🍒', '🍓', '🛍️', '🪩'],
+      startStickers: [
+        { e: '🫒', x: 20, y: 9, s: 52, r: -25 },
+        { e: '⭐', x: 82, y: 11, s: 56, r: 12 },
+        { e: '🌟', x: 91, y: 20, s: 38, r: 0 },
+        { e: '💸', x: 20, y: 84, s: 62, r: -10 },
+        { e: '🍸', x: 81, y: 72, s: 88, r: 8 },
+        { e: '🎀', x: 74, y: 82, s: 42, r: 0 }
+      ],
+      fields: standardFields('Nombre de la festejada', 'Fernanda', 'Birthday', 'Terraza Aurora', true),
+      palettes: [
+        { id: 'oliva', name: 'Oliva', vars: { '--bg': '#F1F1E4', '--paper': '#FFFFFF', '--ink': '#5B3A29', '--muted': '#8C7566', '--accent': '#C0436F', '--accent-ink': '#FFFFFF', '--accent-2': '#C79A3B', '--pop-1': '#B3B88F', '--pop-2': '#F7B9CF' } },
+        { id: 'lila', name: 'Lila', vars: { '--bg': '#F4EFFA', '--paper': '#FFFFFF', '--ink': '#4B3566', '--muted': '#8574A0', '--accent': '#8E5BD1', '--accent-ink': '#FFFFFF', '--accent-2': '#E0A93B', '--pop-1': '#CDBEEA', '--pop-2': '#F6BEDD' } },
+        { id: 'cielo', name: 'Cielo', vars: { '--bg': '#EAF4F8', '--paper': '#FFFFFF', '--ink': '#2F4858', '--muted': '#6F8A99', '--accent': '#2F8FB8', '--accent-ink': '#FFFFFF', '--accent-2': '#E8A33D', '--pop-1': '#A9D4E4', '--pop-2': '#FFC9B8' } }
+      ],
+      defaults: () => ({
+        names: 'Fernanda',
+        motive: 'Birthday',
+        age: '',
+        photo: '',
+        date: inDays(24),
+        time: '20:00',
+        venue: 'Terraza Aurora',
+        address: 'Av. del Mar 900, Zona Dorada',
+        mapsUrl: '',
+        message: 'Brindemos por otro año de vida. Ven con tu mejor look, habrá música, cócteles y mucha diversión.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia al cumpleaños de Fernanda 🍸'
+      })
+    },
+
+    {
+      id: 'collage-rosa',
+      name: 'Collage Rosa',
+      category: 'infantil',
+      cover: null,
+      layout: 'collage',
+      kicker: 'Ready? Es mi',
+      nameStyle: 'ransom', // el nombre se arma con letras recortadas, una por una
+      photoOptional: true,
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['🩷', '💖', '🎀', '💎', '🩴', '👑', '🍭', '🧁', '🎂', '🦄', '💗', '🪩', '👛', '🌺', '🍓'],
+      startStickers: [
+        { e: '🩴', x: 20, y: 7, s: 64, r: -12 },
+        { e: '🩴', x: 44, y: 6, s: 64, r: 8 },
+        { e: '🩷', x: 87, y: 8, s: 58, r: 12 },
+        { e: '⭐', x: 91, y: 20, s: 44, r: 0 },
+        { e: '🌺', x: 12, y: 47, s: 44, r: 0 },
+        { e: '💎', x: 89, y: 47, s: 34, r: 0 },
+        { e: '🎀', x: 14, y: 90, s: 52, r: -10 }
+      ],
+      fields: standardFields('Nombre de la festejada', 'Alexya', "It's my birthday", 'Casa de Alexya', true),
+      palettes: [
+        { id: 'rosa', name: 'Rosa', vars: { '--bg': '#FFE9F2', '--paper': '#FFFFFF', '--ink': '#5A1F3F', '--muted': '#9A5F7F', '--accent': '#E0307F', '--accent-ink': '#FFFFFF', '--accent-2': '#FFC83D', '--pop-1': '#9A6BFF', '--pop-2': '#FFE48A' } },
+        { id: 'cielo', name: 'Cielo', vars: { '--bg': '#E5F4FF', '--paper': '#FFFFFF', '--ink': '#18365A', '--muted': '#5F7FA5', '--accent': '#1E88E5', '--accent-ink': '#FFFFFF', '--accent-2': '#FF8FB0', '--pop-1': '#26C6A6', '--pop-2': '#FFF0A8' } },
+        { id: 'lila', name: 'Lila', vars: { '--bg': '#F1E9FF', '--paper': '#FFFFFF', '--ink': '#3F2468', '--muted': '#8467B3', '--accent': '#8E4DE0', '--accent-ink': '#FFFFFF', '--accent-2': '#FFB74D', '--pop-1': '#FF5FA2', '--pop-2': '#D8F3A8' } }
+      ],
+      defaults: () => ({
+        names: 'Alexya',
+        motive: "It's my birthday",
+        age: '2',
+        photo: '',
+        date: inDays(18),
+        time: '17:00',
+        venue: 'Casa de Alexya',
+        address: 'Calle Las Rosas 45, Col. Primavera',
+        mapsUrl: '',
+        message: '¡Vamos a celebrar mi cumpleaños con globos, pastel y muchas sorpresas! Te espero.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia al cumpleaños de Alexya 💖'
+      })
+    },
+
+    {
+      id: 'halloween-noche',
+      name: 'Noche de Halloween',
+      category: 'halloween',
+      cover: null,
+      layout: 'halloween',
+      kicker: '¡Truco o trato!',
+      photoOptional: true,
+      floaters: ['🦇', '🕸️', '🎃', '👻', '🦇', '🕷️', '💀', '🍬'],
+      sections: SECTIONS_STD,
+      stickers: ['🎃', '👻', '🦇', '🕷️', '🕸️', '💀', '🧙', '🧛', '🍬', '🍭', '🌙', '🪦', '🔮', '🧟', '🕯️', '🦉'],
+      startStickers: [
+        { e: '🕸️', x: 9, y: 5, s: 78, r: 0 },
+        { e: '🎃', x: 17, y: 91, s: 76, r: -8 },
+        { e: '👻', x: 84, y: 89, s: 68, r: 8 }
+      ],
+      fields: standardFields('Título de la fiesta', 'Noche de Brujas', 'Fiesta de disfraces', 'Casa Embrujada'),
+      palettes: [
+        { id: 'calabaza', name: 'Calabaza', vars: { '--bg': '#140B24', '--paper': '#24153D', '--ink': '#FFF4E0', '--muted': '#B9A6D6', '--accent': '#FF7A1A', '--accent-ink': '#1A0B2E', '--accent-2': '#FFC83D', '--pop-1': '#9B5CFF', '--pop-2': '#5CFF8A' } },
+        { id: 'bruja', name: 'Bruja', vars: { '--bg': '#0E1A14', '--paper': '#16291F', '--ink': '#EFFFE6', '--muted': '#9FC4AC', '--accent': '#7CFF4D', '--accent-ink': '#0A1A10', '--accent-2': '#C58BFF', '--pop-1': '#FF7A1A', '--pop-2': '#FFD23F' } },
+        { id: 'fantasma', name: 'Fantasma', vars: { '--bg': '#0F1822', '--paper': '#192634', '--ink': '#F2F8FF', '--muted': '#9DB2C7', '--accent': '#9FD8FF', '--accent-ink': '#0F1822', '--accent-2': '#FF7A1A', '--pop-1': '#B28CFF', '--pop-2': '#FFE08A' } }
+      ],
+      defaults: () => ({
+        names: 'Noche de Brujas',
+        motive: 'Fiesta de disfraces',
+        photo: '',
+        date: nextHalloween(),
+        time: '20:00',
+        venue: 'Casa Embrujada',
+        address: 'Calle del Panteón 13, Col. Las Ánimas',
+        mapsUrl: '',
+        message: 'Si te atreves, ven a nuestra fiesta de Halloween: disfraces, dulces y muchos sustos. ¡Habrá premio al mejor disfraz!',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a la fiesta de Halloween 🎃'
+      })
+    },
+
+    /* ---------- Fiestas infantiles interactivas ---------- */
     {
       id: 'fiesta-confeti',
       name: 'Fiesta Confeti',
       category: 'infantil',
-      cover: null, // null = se genera una miniatura automática de la propia plantilla
+      cover: null,
       layout: 'confeti',
       kicker: '¡Estás invitado!',
       floaters: ['🎈', '🎉', '⭐', '🎈', '🎁', '🎈', '✨', '🎂'],
       sections: SECTIONS_STD,
+      stickers: ['🎂', '🧁', '🍭', '🦄', '🎊', '🥳', '🪅', '🎠'],
+      startStickers: [],
       fields: standardFields('Nombre del festejado', 'Sofía', '¡Cumplo 6 años!', 'Salón Mundo Mágico'),
       palettes: [
         { id: 'arcoiris', name: 'Arcoíris', vars: { '--bg': '#EAF7FF', '--paper': '#FFFFFF', '--ink': '#2B2A4C', '--muted': '#6B6A8C', '--accent': '#FF4F8B', '--accent-ink': '#FFFFFF', '--accent-2': '#FFC83D', '--pop-1': '#2FB8F0', '--pop-2': '#4CCB6A' } },
@@ -643,6 +1008,8 @@ body.is-editor .topbar { display: none; }
       kicker: '¡Únete a la aventura!',
       floaters: ['🦁', '🌴', '🐘', '🦒', '🐵', '🦓', '🌿', '🐯'],
       sections: SECTIONS_STD,
+      stickers: ['🦁', '🐘', '🦒', '🐵', '🦓', '🐯', '🌴', '🌿', '🐊', '🦜', '🐍', '☀️'],
+      startStickers: [],
       fields: standardFields('Nombre del festejado', 'Mateo', '¡Cumplo 4 años!', 'Parque La Selva'),
       palettes: [
         { id: 'sabana', name: 'Sabana', vars: { '--bg': '#FFF3D1', '--paper': '#FFFFFF', '--ink': '#3B2A14', '--muted': '#7C6540', '--accent': '#2E9E5B', '--accent-ink': '#FFFFFF', '--accent-2': '#FFB020', '--pop-1': '#E4572E', '--pop-2': '#8B5E34' } },
@@ -673,6 +1040,8 @@ body.is-editor .topbar { display: none; }
       kicker: 'Misión: ¡mi cumpleaños!',
       floaters: ['🚀', '🪐', '⭐', '🌙', '🛸', '🌟', '☄️', '🌎'],
       sections: SECTIONS_STD,
+      stickers: ['🚀', '🪐', '🌙', '🛸', '🌟', '☄️', '🌎', '👨‍🚀', '👽', '🌠', '🛰️'],
+      startStickers: [],
       fields: standardFields('Nombre del astronauta', 'Leo', '¡Cumplo 7 años!', 'Centro de Eventos Galaxia'),
       palettes: [
         { id: 'galaxia', name: 'Galaxia', vars: { '--bg': '#101746', '--paper': '#1B2566', '--ink': '#F4F6FF', '--muted': '#AEB6E8', '--accent': '#7C5CFF', '--accent-ink': '#FFFFFF', '--accent-2': '#FFD43B', '--pop-1': '#26D0CE', '--pop-2': '#FF6FB5' } },
@@ -694,6 +1063,7 @@ body.is-editor .topbar { display: none; }
       })
     },
 
+    /* ---------- Elegantes ---------- */
     {
       id: 'xv-dorado',
       name: 'XV Dorado',
@@ -703,6 +1073,8 @@ body.is-editor .topbar { display: none; }
       kicker: 'Te invito a celebrar',
       floaters: ['✨', '💫', '✨', '✨'],
       sections: SECTIONS_STD,
+      stickers: ['👑', '🦋', '🌹', '💎', '👗', '🥂', '🕊️', '💫', '🌸'],
+      startStickers: [],
       fields: standardFields('Nombre de la quinceañera', 'Valeria Ramírez', 'Mis XV años', 'Jardín Las Palmas'),
       palettes: [
         { id: 'medianoche', name: 'Medianoche', vars: { '--bg': '#0F1226', '--paper': '#171B38', '--ink': '#F3EBD7', '--muted': '#B7B0C9', '--accent': '#D8B65A', '--accent-ink': '#1A1530', '--accent-2': '#8F7BD6' } },
@@ -733,6 +1105,8 @@ body.is-editor .topbar { display: none; }
       kicker: 'Con alegría los invitamos',
       floaters: [],
       sections: SECTIONS_STD,
+      stickers: ['💍', '🤍', '🕊️', '🌿', '🥂', '💐', '🕯️', '🌾'],
+      startStickers: [],
       fields: standardFields('Nombres de los novios', 'Camila & Andrés', 'Nos casamos', 'Hacienda Santa Lucía'),
       palettes: [
         { id: 'marfil', name: 'Marfil', vars: { '--bg': '#F6F1E7', '--paper': '#FFFDF8', '--ink': '#2D2A26', '--muted': '#7B746A', '--accent': '#A8845A', '--accent-ink': '#FFFFFF', '--accent-2': '#D9C7A6' } },
@@ -773,6 +1147,12 @@ body.is-editor .topbar { display: none; }
       .filter(Boolean);
   }
 
+  // Stickers que se ofrecen en el editor: los de la plantilla y luego los generales.
+  function stickerSet(tpl) {
+    const own = tpl.stickers || [];
+    return own.concat(GENERAL_STICKERS.filter((e) => own.indexOf(e) < 0));
+  }
+
   global.TapNova = global.TapNova || {};
   global.TapNova.Catalog = {
     CATEGORIES,
@@ -780,7 +1160,8 @@ body.is-editor .topbar { display: none; }
     FIELDS,
     getTemplate,
     getCategory,
-    resolveFields
+    resolveFields,
+    stickerSet
   };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -810,10 +1191,8 @@ body.is-editor .topbar { display: none; }
   'use strict';
 
   const PREFIX = 'tapnova:inv:v1:';
-  const SCHEMA_VERSION = 1;
+  const SCHEMA_VERSION = 2; // v2: agrega "stickers"
 
-  // Si el navegador no permite localStorage (ej. modo privado estricto),
-  // se usa memoria temporal y se avisa en pantalla.
   let backend;
   let persistent = true;
   try {
@@ -840,6 +1219,10 @@ body.is-editor .topbar { display: none; }
     return 'i' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
   }
 
+  function stickerId() {
+    return 's' + Math.random().toString(36).slice(2, 8);
+  }
+
   function now() {
     return new Date().toISOString();
   }
@@ -861,7 +1244,10 @@ body.is-editor .topbar { display: none; }
   function get(id) {
     try {
       const raw = backend.getItem(PREFIX + id);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const inv = JSON.parse(raw);
+      if (inv && !Array.isArray(inv.stickers)) inv.stickers = []; // borradores de la versión anterior
+      return inv;
     } catch (e) {
       return null;
     }
@@ -879,6 +1265,13 @@ body.is-editor .topbar { display: none; }
     }
   }
 
+  // Los stickers con los que arranca cada plantilla (copias nuevas, con su propio id).
+  function initialStickers(tpl) {
+    return (tpl.startStickers || []).map((s) => ({
+      id: stickerId(), e: s.e, x: s.x, y: s.y, s: s.s, r: s.r || 0
+    }));
+  }
+
   // Arma una invitación NUEVA a partir de una plantilla, SIN guardarla todavía
   // (así, si la persona solo mira una plantilla y regresa, no queda basura).
   // defaults() devuelve un objeto nuevo cada vez, así que dos invitaciones
@@ -892,6 +1285,7 @@ body.is-editor .topbar { display: none; }
       status: 'draft',
       paletteId: tpl.palettes[0].id,
       data: tpl.defaults(),
+      stickers: initialStickers(tpl),
       publication: null, // futuro: { slug, publishedAt, expiresAt }
       createdAt: t,
       updatedAt: t
@@ -915,15 +1309,61 @@ body.is-editor .topbar { display: none; }
     backend.removeItem(PREFIX + id);
   }
 
+  function num(v, min, max, fallback) {
+    const n = Number(v);
+    return isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+  }
+
+  // Limpia un pedido que llega de un archivo (es información externa: no se confía en ella).
+  // Devuelve una invitación válida y NUEVA, o null si el archivo no sirve.
+  function sanitize(raw) {
+    try {
+      if (!raw || typeof raw !== 'object') return null;
+      const src = raw.invitation && typeof raw.invitation === 'object' ? raw.invitation : raw;
+      const tpl = global.TapNova.Catalog.getTemplate(src.templateId);
+      if (!tpl) return null;
+      const base = tpl.defaults();
+      const data = {};
+      Object.keys(base).forEach((k) => {
+        const v = src.data && src.data[k];
+        if (k === 'photo') {
+          data[k] = typeof v === 'string' && v.indexOf('data:image/') === 0 && v.length < 1500000 ? v : '';
+        } else {
+          data[k] = typeof v === 'string' ? v.slice(0, 600) : base[k];
+        }
+      });
+      const palette = tpl.palettes.find((p) => p.id === src.paletteId) || tpl.palettes[0];
+      const stickers = (Array.isArray(src.stickers) ? src.stickers : []).slice(0, 16)
+        .filter((s) => s && typeof s.e === 'string' && s.e)
+        .map((s) => ({
+          id: stickerId(),
+          e: s.e.slice(0, 12),
+          x: num(s.x, -5, 105, 50),
+          y: num(s.y, -5, 105, 50),
+          s: num(s.s, 24, 160, 56),
+          r: num(s.r, -360, 360, 0)
+        }));
+      const t = now();
+      return {
+        schemaVersion: SCHEMA_VERSION, id: uid(), templateId: tpl.id, status: 'draft',
+        paletteId: palette.id, data, stickers, publication: null, createdAt: t, updatedAt: t
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
   global.TapNova = global.TapNova || {};
-  global.TapNova.Storage = { list, get, save, build, duplicate, remove, isPersistent: () => persistent };
+  global.TapNova.Storage = {
+    list, get, save, build, duplicate, remove, initialStickers, sanitize, isPersistent: () => persistent
+  };
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
   <script>
 /*
- * render.js — Convierte (plantilla + datos de una invitación) en HTML
- * y le da vida (confeti, globos que se revientan, cuenta regresiva, animaciones).
+ * render.js — Convierte (plantilla + datos + stickers de una invitación) en HTML
+ * y le da vida (confeti, globos que se revientan, stickers, cuenta regresiva).
  *
  * Una sola función de dibujo sirve para TODAS las plantillas: lo que cambia
  * entre una plantilla y otra son sus textos, paletas, adornos y estilos CSS
@@ -943,6 +1383,10 @@ body.is-editor .topbar { display: none; }
 
   function multiline(v) {
     return esc(v).replace(/\n/g, '<br>');
+  }
+
+  function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
   }
 
   function parseDateTime(dateStr, timeStr) {
@@ -1025,28 +1469,61 @@ body.is-editor .topbar { display: none; }
     [6, 58, 36, 6.4, -4.0], [84, 56, 30, 5.0, -1.8], [14, 82, 32, 5.8, -2.9], [76, 84, 36, 5.4, -3.6]
   ];
 
+  // Stickers: cada uno es { id, e (emoji), x, y (% de la portada), s (tamaño px), r (giro °) }.
+  function stickersHtml(list) {
+    if (!Array.isArray(list) || !list.length) return '';
+    const items = list.slice(0, 16).map((st) => {
+      if (!st || typeof st.e !== 'string' || !st.e) return '';
+      const x = clamp(Number(st.x) || 0, -5, 105);
+      const y = clamp(Number(st.y) || 0, -5, 105);
+      const s = clamp(Number(st.s) || 56, 24, 160);
+      const r = clamp(Number(st.r) || 0, -360, 360);
+      return '<span class="inv-st" data-id="' + esc(st.id) + '" style="left:' + x.toFixed(1) + '%;top:' + y.toFixed(1) +
+        '%;--ss:' + s + 'px;--sr:' + r + 'deg">' + esc(st.e.slice(0, 12)) + '</span>';
+    }).join('');
+    return '<div class="inv-stickers" aria-hidden="true">' + items + '</div>';
+  }
+
+  // Nombre: normal, o "letras recortadas" (cada letra con su propio estilo).
+  function namesHtml(tpl, d) {
+    const raw = d.names || 'Tu nombre aquí';
+    if (tpl.nameStyle === 'ransom') {
+      const letters = Array.from(String(raw)).slice(0, 24).map((ch) =>
+        ch === ' ' ? '<span class="sp" aria-hidden="true"></span>' : '<span class="l" aria-hidden="true">' + esc(ch) + '</span>'
+      ).join('');
+      return '<h1 class="inv-names" aria-label="' + esc(raw) + '">' + letters + '</h1>';
+    }
+    return '<h1 class="inv-names">' + esc(raw) + '</h1>';
+  }
+
   // ---------- Secciones ----------
   // Para sumar una sección nueva (música, galería...) se agrega aquí y se
   // nombra en la lista "sections" de la plantilla que la quiera usar.
   const SECTIONS = {
-    hero(tpl, d) {
+    hero(tpl, d, ctx, inv) {
       const hasPhoto = typeof d.photo === 'string' && d.photo.indexOf('data:image/') === 0;
-      const photo = hasPhoto
-        ? '<img src="' + esc(d.photo) + '" alt="Fotografía de ' + esc(d.names) + '">'
-        : '<div class="inv-photo-empty">' + PLACEHOLDER_SVG + '</div>';
+      let photo = '';
+      if (hasPhoto) {
+        photo = '<div class="inv-photo"><img src="' + esc(d.photo) + '" alt="Fotografía de ' + esc(d.names) + '"></div>';
+      } else if (!tpl.photoOptional) {
+        photo = '<div class="inv-photo"><div class="inv-photo-empty">' + PLACEHOLDER_SVG + '</div></div>';
+      }
       const floaters = (tpl.floaters || []).slice(0, FLOAT_SLOTS.length).map((emoji, i) => {
         const s = FLOAT_SLOTS[i];
         return '<span class="inv-float" aria-hidden="true" style="--x:' + s[0] + '%;--y:' + s[1] + '%;--s:' + s[2] +
           'px;--t:' + s[3] + 's;--d:' + s[4] + 's">' + emoji + '</span>';
       }).join('');
+      const age = String(d.age || '').trim();
       return (
         '<header class="inv-hero">' +
         '<div class="inv-deco" aria-hidden="true"></div>' +
         '<p class="inv-kicker">' + esc(tpl.kicker) + '</p>' +
-        '<div class="inv-photo">' + photo + '</div>' +
-        '<h1 class="inv-names">' + esc(d.names || 'Tu nombre aquí') + '</h1>' +
+        photo +
+        namesHtml(tpl, d) +
         (d.motive ? '<p class="inv-motive">' + esc(d.motive) + '</p>' : '') +
+        (age ? '<div class="inv-age">' + esc(age.slice(0, 3)) + '</div>' : '') +
         (floaters ? '<div class="inv-floaters">' + floaters + '</div>' : '') +
+        stickersHtml(inv && inv.stickers) +
         '</header>'
       );
     },
@@ -1126,7 +1603,7 @@ body.is-editor .topbar { display: none; }
     ctx = ctx || {};
     const palette = getPalette(tpl, inv.paletteId);
     const style = Object.keys(palette.vars).map((k) => k + ':' + palette.vars[k]).join(';');
-    const body = tpl.sections.map((name) => (SECTIONS[name] ? SECTIONS[name](tpl, inv.data || {}, ctx) : '')).join('');
+    const body = tpl.sections.map((name) => (SECTIONS[name] ? SECTIONS[name](tpl, inv.data || {}, ctx, inv) : '')).join('');
     return (
       '<article class="inv tpl-' + esc(tpl.layout) + '" style="' + esc(style) + '">' +
       body +
@@ -1135,7 +1612,7 @@ body.is-editor .topbar { display: none; }
     );
   }
 
-  /* ---------- Vida: confeti, globos, animaciones ---------- */
+  /* ---------- Vida: confeti, globos, stickers, animaciones ---------- */
   function prefersReducedMotion() {
     return !!(global.matchMedia && global.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }
@@ -1147,616 +1624,4 @@ body.is-editor .topbar { display: none; }
     return list.length ? list : ['#FF4F8B', '#FFC83D', '#2FB8F0', '#4CCB6A'];
   }
 
-  // Lanza confeti desde el punto (x, y) dentro de la invitación.
-  function burst(inv, x, y) {
-    if (prefersReducedMotion() || !inv.animate) return;
-    const colors = popColors(inv);
-    for (let i = 0; i < 26; i++) {
-      const p = document.createElement('i');
-      p.className = 'inv-conf';
-      const w = 6 + Math.random() * 7;
-      p.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + w + 'px;height:' + (w * (Math.random() > 0.5 ? 1 : 0.5)) +
-        'px;background:' + colors[i % colors.length] + ';' + (Math.random() > 0.6 ? 'border-radius:50%' : '');
-      inv.appendChild(p);
-      const ang = Math.random() * Math.PI * 2;
-      const dist = 50 + Math.random() * 110;
-      const dx = Math.cos(ang) * dist;
-      const dy = Math.sin(ang) * dist;
-      const anim = p.animate([
-        { transform: 'translate(0,0) rotate(0deg) scale(1)', opacity: 1 },
-        { transform: 'translate(' + dx + 'px,' + (dy + 70) + 'px) rotate(' + (Math.random() * 720 - 360) + 'deg) scale(.5)', opacity: 0 }
-      ], { duration: 800 + Math.random() * 600, easing: 'cubic-bezier(.15,.8,.3,1)' });
-      anim.onfinish = () => p.remove();
-    }
-  }
-
-  // Pone a andar la invitación dentro de "root". Devuelve una función para detenerla.
-  //   opts.live = true → con animaciones de entrada (al abrir la invitación)
-  function mount(root, opts) {
-    opts = opts || {};
-    const inv = root.querySelector('.inv');
-    if (!inv) return function () {};
-    const reduce = prefersReducedMotion();
-    let io = null;
-
-    // Entrada suave de cada bloque al hacer scroll.
-    if (opts.live) {
-      inv.classList.add('inv-live');
-      const items = Array.prototype.slice.call(inv.querySelectorAll('.reveal'));
-      if ('IntersectionObserver' in global && !reduce) {
-        io = new IntersectionObserver((entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-          });
-        }, { threshold: 0.12 });
-        items.forEach((el) => io.observe(el));
-      } else {
-        items.forEach((el) => el.classList.add('in'));
-      }
-      if (!reduce) setTimeout(() => { if (inv.isConnected) burst(inv, inv.clientWidth / 2, 190); }, 450);
-    }
-
-    // Tocar un adorno lo revienta; tocar la foto o el nombre lanza confeti.
-    inv.addEventListener('click', (e) => {
-      const r = inv.getBoundingClientRect();
-      const f = e.target.closest('.inv-float');
-      if (f) {
-        if (f.classList.contains('pop')) return;
-        f.classList.add('pop');
-        const fr = f.getBoundingClientRect();
-        burst(inv, fr.left - r.left + fr.width / 2, fr.top - r.top + fr.height / 2);
-        setTimeout(() => f.classList.remove('pop'), 3200);
-        return;
-      }
-      if (e.target.closest('.inv-photo, .inv-names')) {
-        burst(inv, e.clientX - r.left, e.clientY - r.top);
-        const ph = inv.querySelector('.inv-photo');
-        if (ph) { ph.classList.remove('wiggle'); void ph.offsetWidth; ph.classList.add('wiggle'); }
-      }
-    });
-
-    // La foto se inclina con el dedo o el cursor.
-    const hero = inv.querySelector('.inv-hero');
-    const photo = inv.querySelector('.inv-photo');
-    if (hero && photo && !reduce) {
-      hero.addEventListener('pointermove', (e) => {
-        const b = hero.getBoundingClientRect();
-        const x = (e.clientX - b.left) / b.width - 0.5;
-        const y = (e.clientY - b.top) / b.height - 0.5;
-        photo.style.setProperty('--rx', (-y * 16).toFixed(1) + 'deg');
-        photo.style.setProperty('--ry', (x * 16).toFixed(1) + 'deg');
-      });
-      hero.addEventListener('pointerleave', () => {
-        photo.style.setProperty('--rx', '0deg');
-        photo.style.setProperty('--ry', '0deg');
-      });
-    }
-
-    // Cuenta regresiva en vivo.
-    const boxes = Array.prototype.slice.call(inv.querySelectorAll('[data-countdown]'));
-    function tick() {
-      boxes.forEach((box) => {
-        const p = countdownParts(Number(box.getAttribute('data-countdown')), Date.now());
-        const grid = box.querySelector('.inv-count');
-        const done = box.querySelector('.inv-count-done');
-        if (p.done) {
-          if (grid) grid.hidden = true;
-          if (done) done.hidden = false;
-          return;
-        }
-        ['d', 'h', 'm', 's'].forEach((k) => {
-          const el = box.querySelector('[data-u="' + k + '"]');
-          if (el && el.textContent !== pad(p[k])) {
-            el.textContent = pad(p[k]);
-            if (k === 's' && !reduce) { el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); }
-          }
-        });
-      });
-    }
-    tick();
-    const timer = boxes.length ? setInterval(tick, 1000) : null;
-
-    return function stop() {
-      if (timer) clearInterval(timer);
-      if (io) io.disconnect();
-    };
-  }
-
-  global.TapNova = global.TapNova || {};
-  global.TapNova.Render = {
-    render, mount, esc, safeUrl, whatsappLink, countdownParts, formatDate, formatTime, parseDateTime, getPalette
-  };
-})(typeof window !== 'undefined' ? window : globalThis);
-
-</script>
-  <script>
-/*
- * app.js — Pantallas de la plataforma: galería de plantillas y editor.
- *
- * Rutas (se leen del "#" de la dirección, así funcionan en cualquier hosting estático):
- *   #/                 → galería (inicio)
- *   #/nueva/<plantilla>→ editor con una invitación nueva (aún sin guardar)
- *   #/editar/<id>      → editor con un borrador guardado
- */
-(function () {
-  'use strict';
-
-  const Catalog = window.TapNova.Catalog;
-  const Storage = window.TapNova.Storage;
-  const Render = window.TapNova.Render;
-  const esc = Render.esc;
-
-  const app = document.getElementById('app');
-  const toastEl = document.getElementById('toast');
-  const BASE_TITLE = 'Tap Nova Invitaciones — Crea tu invitación digital';
-
-  let leave = null;          // limpieza de la pantalla actual
-  let galleryFilter = 'todas';
-  let toastTimer = null;
-
-  function toast(msg) {
-    toastEl.textContent = msg;
-    toastEl.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 3200);
-  }
-
-  function shortDate(iso) {
-    const d = new Date(iso);
-    return isNaN(d) ? '' : d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
-  }
-
-  /* ======================= Enrutador ======================= */
-  function route() {
-    if (leave) { leave(); leave = null; }
-    app.onclick = null; app.oninput = null; app.onchange = null;
-    document.body.classList.remove('is-editor');
-
-    const parts = location.hash.replace(/^#\/?/, '').split('/');
-    const view = parts[0];
-    const arg = decodeURIComponent(parts[1] || '');
-
-    if (view === 'nueva') {
-      const tpl = Catalog.getTemplate(arg);
-      if (tpl) { window.scrollTo(0, 0); return showEditor(tpl, Storage.build(tpl), true); }
-    } else if (view === 'editar') {
-      const inv = Storage.get(arg);
-      const tpl = inv && Catalog.getTemplate(inv.templateId);
-      if (inv && tpl) { window.scrollTo(0, 0); return showEditor(tpl, inv, false); }
-      toast('No encontramos esa invitación en este dispositivo.');
-    }
-    if (location.hash && !/^#\/?$/.test(location.hash)) history.replaceState(null, '', '#/');
-    showGallery();
-    window.scrollTo(0, 0);
-  }
-
-  /* ======================= Galería ======================= */
-  function miniature(tpl) {
-    return Render.render(tpl, { paletteId: tpl.palettes[0].id, data: tpl.defaults() }, { preview: false });
-  }
-
-  function templateCard(tpl) {
-    const cat = Catalog.getCategory(tpl.category);
-    const href = '#/nueva/' + encodeURIComponent(tpl.id);
-    const preview = tpl.cover
-      ? '<img class="cover" src="' + esc(tpl.cover) + '" alt="" loading="lazy">'
-      : '<div class="thumb-inner">' + miniature(tpl) + '</div>';
-    const tagColor = tpl.palettes[0].vars['--accent'];
-    return (
-      '<article class="card">' +
-      '<div class="thumb">' + preview +
-      '<a class="thumb-link" href="' + href + '" aria-label="Personalizar ' + esc(tpl.name) + '"></a></div>' +
-      '<div class="card-body">' +
-      '<span class="tag" style="--tag:' + esc(tagColor) + '">' + esc(cat ? cat.name : '') + '</span>' +
-      '<h3>' + esc(tpl.name) + '</h3>' +
-      '<a class="card-cta" href="' + href + '">Personalizar <span aria-hidden="true">›</span></a>' +
-      '</div></article>'
-    );
-  }
-
-  function mockHtml(id, pos) {
-    const tpl = Catalog.getTemplate(id);
-    if (!tpl) return '';
-    return '<div class="mock mock-' + pos + '" aria-hidden="true"><div class="thumb"><div class="thumb-inner">' + miniature(tpl) + '</div></div></div>';
-  }
-
-  function draftItem(inv) {
-    const tpl = Catalog.getTemplate(inv.templateId);
-    const name = (inv.data && inv.data.names) || 'Sin nombre';
-    const open = tpl
-      ? '<a class="btn btn-sm btn-dark" href="#/editar/' + encodeURIComponent(inv.id) + '">Abrir</a>'
-      : '';
-    const dup = tpl ? '<button class="btn btn-sm" type="button" data-act="dup" data-id="' + esc(inv.id) + '">Duplicar</button>' : '';
-    return (
-      '<li class="draft"><div><strong>' + esc(name) + '</strong>' +
-      '<small>' + esc(tpl ? tpl.name : 'Plantilla no disponible') + ' · Borrador · editado ' + esc(shortDate(inv.updatedAt)) + '</small></div>' +
-      '<div class="draft-actions">' + open + dup +
-      '<button class="btn btn-sm btn-danger" type="button" data-act="del" data-id="' + esc(inv.id) + '">Eliminar</button>' +
-      '</div></li>'
-    );
-  }
-
-  function showGallery() {
-    document.title = BASE_TITLE;
-    const drafts = Storage.list();
-    const cats = Catalog.CATEGORIES.filter((c) => Catalog.TEMPLATES.some((t) => t.category === c.id));
-    if (galleryFilter !== 'todas' && !cats.some((c) => c.id === galleryFilter)) galleryFilter = 'todas';
-
-    const chips = [{ id: 'todas', name: 'Todas' }].concat(cats)
-      .map((c) => '<button class="chip-btn" type="button" data-filter="' + esc(c.id) + '" aria-pressed="' + (c.id === galleryFilter) + '">' + esc(c.name) + '</button>')
-      .join('');
-
-    app.innerHTML =
-      '<section class="hero"><div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i></div>' +
-      '<div class="wrap">' +
-      '<p class="eyebrow">Tap Nova Invitaciones</p>' +
-      '<h1>Crea tu <span class="grad">invitación digital</span></h1>' +
-      '<p class="lead">Elige un diseño, escribe los datos de tu fiesta y míralo cobrar vida en tu celular.</p>' +
-      '<div class="cta"><button class="btn btn-primary" type="button" data-act="scroll">Elegir plantilla</button></div>' +
-      '<div class="showcase" id="showcase">' + mockHtml('mision-espacial', 'left') + mockHtml('fiesta-confeti', 'mid') + mockHtml('safari-aventura', 'right') + '</div>' +
-      '</div></section>' +
-      (drafts.length
-        ? '<section class="section wrap" id="borradores"><h2>Mis borradores</h2>' +
-          '<p class="section-sub">Se guardan solo en este dispositivo.</p>' +
-          (Storage.isPersistent() ? '' : '<p class="notice">Tu navegador no permite guardar de forma permanente: los borradores se perderán al cerrar esta pestaña.</p>') +
-          '<ul class="drafts">' + drafts.map(draftItem).join('') + '</ul></section>'
-        : '') +
-      '<section class="section wrap" id="plantillas-sec"><h2>Plantillas</h2>' +
-      '<p class="section-sub">Elige la que más te guste. Después cambias textos, foto y colores.</p>' +
-      '<div class="chips" role="group" aria-label="Filtrar por tipo de evento">' + chips + '</div>' +
-      '<div class="grid" id="grid"></div></section>' +
-      '<footer class="site-foot wrap">Tap Nova Studio · Marketing que se toca</footer>';
-
-    let stopThumbs = null;
-    let cardObserver = null;
-    function paintGrid() {
-      if (stopThumbs) stopThumbs();
-      if (cardObserver) cardObserver.disconnect();
-      const grid = document.getElementById('grid');
-      const items = Catalog.TEMPLATES.filter((t) => galleryFilter === 'todas' || t.category === galleryFilter);
-      grid.innerHTML = items.length
-        ? items.map(templateCard).join('')
-        : '<p class="empty">Aún no hay plantillas en esta categoría. ¡Pronto habrá más!</p>';
-      stopThumbs = fitThumbs(app);
-      // Las tarjetas aparecen suavemente al entrar en pantalla.
-      const cards = Array.prototype.slice.call(grid.querySelectorAll('.card'));
-      if ('IntersectionObserver' in window) {
-        cards.forEach((c) => c.classList.add('pre'));
-        cardObserver = new IntersectionObserver((es) => {
-          es.forEach((e) => { if (e.isIntersecting) { e.target.classList.remove('pre'); cardObserver.unobserve(e.target); } });
-        }, { threshold: 0.08 });
-        cards.forEach((c) => cardObserver.observe(c));
-      }
-    }
-    paintGrid();
-    leave = () => { if (stopThumbs) stopThumbs(); if (cardObserver) cardObserver.disconnect(); };
-
-    app.onclick = function (e) {
-      const chip = e.target.closest('[data-filter]');
-      if (chip) {
-        galleryFilter = chip.getAttribute('data-filter');
-        app.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === chip)));
-        paintGrid();
-        return;
-      }
-      const btn = e.target.closest('[data-act]');
-      if (!btn) return;
-      const act = btn.getAttribute('data-act');
-      const id = btn.getAttribute('data-id');
-      if (act === 'scroll') {
-        document.getElementById('plantillas-sec').scrollIntoView({ behavior: 'smooth' });
-      } else if (act === 'dup') {
-        if (Storage.duplicate(id)) { toast('Copia creada.'); rerender(); }
-        else toast('No se pudo duplicar: no hay espacio en este dispositivo.');
-      } else if (act === 'del') {
-        if (window.confirm('¿Eliminar este borrador? No se puede deshacer.')) {
-          Storage.remove(id);
-          toast('Borrador eliminado.');
-          rerender();
-        }
-      }
-    };
-  }
-
-  function rerender() {
-    const y = window.scrollY;
-    if (leave) { leave(); leave = null; }
-    showGallery();
-    window.scrollTo(0, y);
-  }
-
-  // Las miniaturas son la propia plantilla dibujada a 390px y reducida.
-  function fitThumbs(root) {
-    function scale(t) {
-      const inner = t.querySelector('.thumb-inner');
-      if (inner && t.clientWidth) inner.style.transform = 'scale(' + (t.clientWidth / 390) + ')';
-    }
-    const ro = 'ResizeObserver' in window ? new ResizeObserver((es) => es.forEach((e) => scale(e.target))) : null;
-    root.querySelectorAll('.thumb').forEach((t) => { scale(t); if (ro) ro.observe(t); });
-    return function () { if (ro) ro.disconnect(); };
-  }
-
-  /* ======================= Editor ======================= */
-  const GROUPS = [
-    { title: 'Lo principal', keys: ['names', 'motive', 'photo'] },
-    { title: 'Cuándo y dónde', keys: ['date', 'time', 'venue', 'address', 'mapsUrl'] },
-    { title: 'Mensaje y confirmación', keys: ['message', 'whatsapp', 'rsvpText'] }
-  ];
-
-  function fieldHtml(f, value) {
-    const id = 'f-' + f.key;
-    const ph = f.placeholder ? ' placeholder="' + esc(f.placeholder) + '"' : '';
-    const max = f.max ? ' maxlength="' + f.max + '"' : '';
-    const hint = f.hint ? '<small id="' + id + '-h">' + esc(f.hint) + '</small>' : '';
-    const err = (f.key === 'mapsUrl' || f.key === 'whatsapp') ? '<small class="err" data-err="' + f.key + '" role="alert"></small>' : '';
-    const desc = f.hint ? ' aria-describedby="' + id + '-h"' : '';
-    const label = '<label for="' + id + '">' + esc(f.label) + '</label>';
-
-    if (f.type === 'image') {
-      return (
-        '<div class="field"><span class="field-label">' + esc(f.label) + '</span>' +
-        '<div class="photo-field">' +
-        '<div class="photo-thumb" id="photoThumb"></div>' +
-        '<input id="photoInput" type="file" accept="image/*">' +
-        '<label class="btn btn-sm" for="photoInput">Subir foto</label>' +
-        '<button class="btn btn-sm btn-danger" type="button" id="photoRemove">Quitar</button>' +
-        '</div><small>Se reduce automáticamente para que tu invitación cargue rápido.</small></div>'
-      );
-    }
-    if (f.type === 'textarea') {
-      return '<div class="field">' + label + '<textarea id="' + id + '" name="' + f.key + '" rows="' + (f.rows || 3) + '"' + ph + max + desc + '>' + esc(value) + '</textarea>' + hint + err + '</div>';
-    }
-    const type = { text: 'text', url: 'text', tel: 'tel', date: 'date', time: 'time' }[f.type] || 'text';
-    const mode = f.type === 'url' ? ' inputmode="url" autocapitalize="off" spellcheck="false"' : f.type === 'tel' ? ' inputmode="tel"' : '';
-    return '<div class="field">' + label + '<input id="' + id + '" name="' + f.key + '" type="' + type + '"' + mode + ph + max + desc + ' value="' + esc(value) + '">' + hint + err + '</div>';
-  }
-
-  function groupHtml(title, fields, data) {
-    if (!fields.length) return '';
-    const out = [];
-    for (let i = 0; i < fields.length; i++) {
-      const f = fields[i];
-      const next = fields[i + 1];
-      if (f.key === 'date' && next && next.key === 'time') {
-        out.push('<div class="row-2">' + fieldHtml(f, data.date) + fieldHtml(next, data.time) + '</div>');
-        i++;
-      } else {
-        out.push(fieldHtml(f, data[f.key]));
-      }
-    }
-    return '<section class="group"><h3>' + esc(title) + '</h3>' + out.join('') + '</section>';
-  }
-
-  function fieldsHtml(fields, data) {
-    const used = new Set();
-    let html = GROUPS.map((g) => {
-      const list = fields.filter((f) => g.keys.indexOf(f.key) >= 0);
-      list.forEach((f) => used.add(f.key));
-      return groupHtml(g.title, list, data);
-    }).join('');
-    const rest = fields.filter((f) => !used.has(f.key));
-    if (rest.length) html += groupHtml('Más detalles', rest, data);
-    return html;
-  }
-
-  // Reduce la foto a 900px y la guarda como JPG para que quepa en el dispositivo.
-  function fileToDataUrl(file) {
-    return new Promise((resolve, reject) => {
-      const fr = new FileReader();
-      fr.onerror = () => reject(new Error('read'));
-      fr.onload = () => {
-        const img = new Image();
-        img.onerror = () => reject(new Error('img'));
-        img.onload = () => {
-          const s = Math.min(1, 900 / Math.max(img.width, img.height));
-          const c = document.createElement('canvas');
-          c.width = Math.max(1, Math.round(img.width * s));
-          c.height = Math.max(1, Math.round(img.height * s));
-          const ctx = c.getContext('2d');
-          ctx.fillStyle = '#fff';
-          ctx.fillRect(0, 0, c.width, c.height);
-          ctx.drawImage(img, 0, 0, c.width, c.height);
-          resolve(c.toDataURL('image/jpeg', 0.8));
-        };
-        img.src = fr.result;
-      };
-      fr.readAsDataURL(file);
-    });
-  }
-
-  function showEditor(tpl, inv, isNew) {
-    document.title = 'Editando ' + tpl.name + ' — Tap Nova';
-    document.body.classList.add('is-editor');
-    const fields = Catalog.resolveFields(tpl);
-    const textKeys = new Set(fields.filter((f) => f.type !== 'image').map((f) => f.key));
-    const data = inv.data;
-
-    const dots = tpl.palettes.map((p) => {
-      const v = p.vars;
-      const c3 = v['--pop-1'] || v['--accent-2'];
-      return '<button class="dot" type="button" role="radio" aria-checked="' + (p.id === inv.paletteId) + '" data-palette="' + esc(p.id) + '">' +
-        '<i style="background:conic-gradient(' + v['--accent'] + ' 0 33%,' + v['--accent-2'] + ' 0 66%,' + c3 + ' 0)"></i>' + esc(p.name) + '</button>';
-    }).join('');
-
-    app.innerHTML =
-      '<div class="editor" data-tab="edit">' +
-      '<div class="navbar"><div class="wrap">' +
-      '<a class="nav-back" href="#/">‹ Plantillas</a>' +
-      '<div class="nav-title"><strong>' + esc(tpl.name) + '</strong><small id="saveState"></small></div>' +
-      '<button class="nav-save" type="button" id="saveBtn">Guardar</button>' +
-      '</div></div>' +
-      '<div class="editor-grid">' +
-      '<form class="form" id="form" autocomplete="off" novalidate>' +
-      fieldsHtml(fields, data) +
-      '<section class="group"><h3>Colores</h3>' +
-      '<div class="palettes" role="radiogroup" aria-label="Colores">' + dots + '</div></section>' +
-      '<section class="group"><h3>Publicar</h3>' +
-      '<div class="field"><button class="btn btn-block" type="button" disabled>Publicar y compartir</button></div>' +
-      '<p class="publish-note">Próximamente podrás publicar tu invitación con un enlace único y compartirla por WhatsApp. Por ahora es un borrador guardado solo en este dispositivo.</p></section>' +
-      '</form>' +
-      '<section class="preview" aria-label="Vista previa">' +
-      '<div class="preview-head"><p>Vista previa · así la verán tus invitados</p>' +
-      '<button class="btn btn-sm" type="button" id="playBtn">▶ Ver animación</button></div>' +
-      '<div class="phone"><div class="phone-screen" id="inv-root"></div></div>' +
-      '</section></div>' +
-      '<nav class="tabs" aria-label="Cambiar entre editar y vista previa">' +
-      '<button type="button" class="is-active" data-tab="edit">Editar</button>' +
-      '<button type="button" data-tab="preview">Vista previa</button></nav>' +
-      '</div>';
-
-    const editor = app.querySelector('.editor');
-    const form = app.querySelector('#form');
-    const root = app.querySelector('#inv-root');
-    const saveStateEl = app.querySelector('#saveState');
-    const photoThumb = app.querySelector('#photoThumb');
-    const photoRemove = app.querySelector('#photoRemove');
-
-    let stopCount = null;
-    let paintQueued = false;
-    let dirty = false;
-    let saveTimer = null;
-
-    // live=true reproduce las animaciones de entrada; mientras se edita se muestra estático.
-    function paint(live) {
-      paintQueued = false;
-      if (stopCount) stopCount();
-      root.innerHTML = Render.render(tpl, inv, { preview: true });
-      stopCount = Render.mount(root, { live: live === true });
-    }
-    function queuePaint() {
-      if (!paintQueued) { paintQueued = true; requestAnimationFrame(() => paint(false)); }
-    }
-
-    function setSaveState(text) { saveStateEl.textContent = 'Borrador · ' + text; }
-
-    // Guarda el borrador. Devuelve el resultado de Storage.save.
-    function saveNow(manual) {
-      clearTimeout(saveTimer);
-      const res = Storage.save(inv);
-      if (res.ok) {
-        dirty = false;
-        // Una invitación nueva pasa a tener su propia dirección (#/editar/id).
-        if (location.hash.indexOf('#/nueva/') === 0) history.replaceState(null, '', '#/editar/' + encodeURIComponent(inv.id));
-        setSaveState(res.persistent ? 'guardado' : 'guardado solo en esta pestaña');
-        if (manual) toast(res.persistent ? 'Borrador guardado en este dispositivo.' : 'Guardado temporalmente: tu navegador no permite guardar de forma permanente.');
-      } else {
-        setSaveState('no se pudo guardar');
-        toast(res.reason === 'quota'
-          ? 'No hay espacio en este dispositivo. Prueba con una foto más pequeña o elimina borradores.'
-          : 'No se pudo guardar el borrador.');
-      }
-      return res;
-    }
-    function markDirty() {
-      dirty = true;
-      setSaveState('guardando…');
-      clearTimeout(saveTimer);
-      saveTimer = setTimeout(() => saveNow(false), 600);
-    }
-
-    function validate(key) {
-      const el = form.querySelector('[data-err="' + key + '"]');
-      if (!el) return;
-      const v = String(data[key] || '').trim();
-      let msg = '';
-      if (key === 'mapsUrl' && v && !Render.safeUrl(v)) msg = 'Ese enlace no parece válido.';
-      if (key === 'whatsapp' && v && !Render.whatsappLink(v, 'x')) msg = 'Escribe tu número a 10 dígitos.';
-      el.textContent = msg;
-    }
-
-    function refreshPhotoUI() {
-      if (!photoThumb) return;
-      const has = typeof data.photo === 'string' && data.photo.indexOf('data:image/') === 0;
-      photoThumb.innerHTML = has ? '<img alt="" src="' + esc(data.photo) + '">' : 'Sin foto';
-      photoRemove.hidden = !has;
-    }
-
-    setSaveState(isNew ? 'sin guardar' : 'guardado');
-    validate('mapsUrl');
-    validate('whatsapp');
-    refreshPhotoUI();
-    paint(false);
-
-    // Escribir en el formulario → actualiza los datos de ESTA invitación y la vista previa.
-    form.addEventListener('input', (e) => {
-      const el = e.target;
-      if (!el.name || !textKeys.has(el.name)) return;
-      data[el.name] = el.value;
-      validate(el.name);
-      queuePaint();
-      markDirty();
-    });
-
-    form.addEventListener('click', (e) => {
-      const sw = e.target.closest('[data-palette]');
-      if (sw) {
-        inv.paletteId = sw.getAttribute('data-palette');
-        form.querySelectorAll('[data-palette]').forEach((b) => b.setAttribute('aria-checked', String(b === sw)));
-        queuePaint();
-        markDirty();
-        return;
-      }
-      if (e.target.closest('#photoRemove')) {
-        data.photo = '';
-        refreshPhotoUI();
-        queuePaint();
-        markDirty();
-      }
-    });
-
-    const photoInput = form.querySelector('#photoInput');
-    if (photoInput) {
-      photoInput.addEventListener('change', async (e) => {
-        const input = e.target;
-        const file = input.files && input.files[0];
-        input.value = '';
-        if (!file) return;
-        if (!/^image\//.test(file.type)) { toast('Elige una imagen (JPG o PNG).'); return; }
-        try {
-          const url = await fileToDataUrl(file);
-          const prev = data.photo;
-          data.photo = url;
-          const res = saveNow(false);
-          if (!res.ok) data.photo = prev; // no cabe: se conserva la foto anterior
-          refreshPhotoUI();
-          queuePaint();
-        } catch (err) {
-          toast('No pudimos leer esa imagen. Prueba con otra.');
-        }
-      });
-    }
-
-    app.querySelector('#saveBtn').addEventListener('click', () => saveNow(true));
-
-    // Reproduce la invitación como la verá un invitado (con animaciones).
-    app.querySelector('#playBtn').addEventListener('click', () => {
-      root.scrollTop = 0;
-      paint(true);
-    });
-
-    editor.querySelector('.tabs').addEventListener('click', (e) => {
-      const b = e.target.closest('[data-tab]');
-      if (!b) return;
-      editor.setAttribute('data-tab', b.getAttribute('data-tab'));
-      editor.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('is-active', x === b));
-      window.scrollTo(0, 0);
-    });
-
-    function onHide() { if (dirty) saveNow(false); }
-    window.addEventListener('pagehide', onHide);
-
-    leave = function () {
-      window.removeEventListener('pagehide', onHide);
-      if (dirty) saveNow(false);
-      clearTimeout(saveTimer);
-      if (stopCount) stopCount();
-    };
-  }
-
-  window.addEventListener('hashchange', route);
-  route();
-})();
-
-</script>
-</body>
-</html>
+  // Lanza confeti desde el punto (x, y) dentro 
