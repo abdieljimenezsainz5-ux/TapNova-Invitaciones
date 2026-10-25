@@ -687,11 +687,11 @@ button { font-family: inherit; letter-spacing: inherit; }
   global.TapNova = global.TapNova || {};
   global.TapNova.Config = {
     studioName: 'Tap Nova Studio',
-    whatsapp: '',
+    whatsapp: '6673457524',
     price: null,
     currency: 'MXN',
     payUrl: '',
-    payNote: ''
+    payNote: 'Paga por transferencia:\nCLABE: 722969010466377184\nBeneficiario: Abdiel Josue Jimenez Sainz\nInstitución: Mercado Pago W\nDespués de pagar, envíanos tu diseño en el paso 2.'
   };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -1620,8 +1620,4 @@ button { font-family: inherit; letter-spacing: inherit; }
   function popColors(inv) {
     const cs = global.getComputedStyle(inv);
     const list = ['--accent', '--accent-2', '--pop-1', '--pop-2']
-      .map((v) => cs.getPropertyValue(v).trim()).filter(Boolean);
-    return list.length ? list : ['#FF4F8B', '#FFC83D', '#2FB8F0', '#4CCB6A'];
-  }
-
-  // Lanza confeti desde el punto (x, y) dentro 
+      .map((v)
