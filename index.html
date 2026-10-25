@@ -12,8 +12,676 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Baloo+2:wght@600;700;800&family=Fredoka:wght@400;500;600&family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@400;500;600&family=Great+Vibes&family=Dancing+Script:wght@600;700&family=Creepster&display=swap">
 
-  <link rel="stylesheet" href="css/app.css">
-  <link rel="stylesheet" href="css/templates.css">
+  <style>
+/*
+ * app.css — Estilos de la plataforma (galería, editor, formularios).
+ * Estilo inspirado en Apple: mucho aire, tipografía grande, cristal esmerilado,
+ * esquinas muy redondeadas y colores de fiesta como acento.
+ * Las invitaciones tienen sus propios estilos en templates.css.
+ */
+:root {
+  --bg: #F5F5F7;
+  --card: #FFFFFF;
+  --ink: #1D1D1F;
+  --gray: #6E6E73;
+  --line: rgba(0, 0, 0, .09);
+  --fill: #F2F2F7;
+  --blue: #0A84FF;
+  --pink: #FF4F8B;
+  --orange: #FF9F43;
+  --sky: #2FB8F0;
+  --grass: #4CCB6A;
+  --purple: #8E7CFF;
+  --sun: #FFC83D;
+  --danger: #D70015;
+  --grad: linear-gradient(135deg, #FF4F8B 0%, #FF9F43 100%);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, system-ui, sans-serif;
+  --spring: cubic-bezier(.2, .8, .2, 1);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 17px; line-height: 1.47; letter-spacing: -.011em; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; }
+button { font-family: inherit; letter-spacing: inherit; }
+:focus-visible { outline: 3px solid rgba(10, 132, 255, .55); outline-offset: 2px; }
+.wrap { width: min(1180px, 100% - 40px); margin-inline: auto; }
+
+/* ---------- Botones ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 26px; border: 0; border-radius: 999px; font-size: 17px; font-weight: 600; text-decoration: none; cursor: pointer; background: var(--fill); color: var(--ink); transition: transform .25s var(--spring), box-shadow .25s var(--spring), background .2s; -webkit-tap-highlight-color: transparent; }
+.btn:active { transform: scale(.96); }
+.btn-primary { background: var(--grad); color: #fff; box-shadow: 0 8px 24px -8px rgba(255, 79, 139, .6); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -8px rgba(255, 79, 139, .65); }
+.btn-dark { background: var(--ink); color: #fff; }
+.btn-sm { min-height: 38px; padding: 0 18px; font-size: 15px; }
+.btn-block { width: 100%; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-danger { color: var(--danger); }
+
+/* ---------- Portada ---------- */
+.hero { position: relative; overflow: hidden; text-align: center; padding: calc(56px + env(safe-area-inset-top)) 0 0; background: #fff; }
+.blobs { position: absolute; inset: 0; pointer-events: none; }
+.blobs i { position: absolute; border-radius: 50%; filter: blur(64px); opacity: .5; animation: drift 14s ease-in-out infinite alternate; }
+.blobs i:nth-child(1) { width: 340px; height: 340px; left: -80px; top: -60px; background: var(--pink); }
+.blobs i:nth-child(2) { width: 300px; height: 300px; right: -60px; top: 40px; background: var(--sky); animation-delay: -4s; }
+.blobs i:nth-child(3) { width: 260px; height: 260px; left: 38%; top: 120px; background: var(--sun); animation-delay: -8s; opacity: .4; }
+.blobs i:nth-child(4) { width: 220px; height: 220px; right: 14%; top: 280px; background: var(--grass); animation-delay: -2s; opacity: .35; }
+@keyframes drift { to { transform: translate(40px, 30px) scale(1.12); } }
+.hero .wrap { position: relative; }
+.eyebrow { font-size: 17px; font-weight: 600; color: var(--pink); margin-bottom: 10px; }
+.hero h1 { font-size: clamp(42px, 10.5vw, 88px); line-height: 1.02; font-weight: 800; letter-spacing: -.045em; max-width: 12ch; margin-inline: auto; }
+.grad { background: linear-gradient(100deg, #FF4F8B, #FF9F43, #2FB8F0, #8E7CFF, #FF4F8B); background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shift 9s linear infinite; }
+@keyframes shift { to { background-position: 250% 0; } }
+.hero .lead { margin: 20px auto 0; max-width: 34ch; font-size: clamp(19px, 4.6vw, 24px); line-height: 1.3; color: var(--gray); font-weight: 500; letter-spacing: -.02em; }
+.hero .cta { margin-top: 30px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+/* Teléfonos de muestra */
+.showcase { position: relative; display: flex; justify-content: center; align-items: flex-start; height: clamp(310px, 82vw, 470px); margin-top: 44px; overflow: hidden; perspective: 1400px;
+  -webkit-mask-image: linear-gradient(#000 70%, transparent); mask-image: linear-gradient(#000 70%, transparent); }
+.mock { flex: none; width: var(--mw, min(236px, 47vw)); border: 8px solid #1D1D1F; border-radius: 38px; background: #1D1D1F; overflow: hidden; box-shadow: 0 40px 70px -24px rgba(0, 0, 0, .45); transition: transform .6s var(--spring); }
+.mock .thumb { aspect-ratio: 390 / 820; border-radius: 0; }
+.mock-left { transform: translateX(30%) translateY(36px) rotate(-7deg); z-index: 1; }
+.mock-mid { transform: scale(1.1); z-index: 2; }
+.mock-right { transform: translateX(-30%) translateY(36px) rotate(7deg); z-index: 1; }
+@media (hover: hover) {
+  .showcase:hover .mock-mid { transform: scale(1.14) translateY(-10px); }
+  .showcase:hover .mock-left { transform: translateX(20%) translateY(26px) rotate(-10deg); }
+  .showcase:hover .mock-right { transform: translateX(-20%) translateY(26px) rotate(10deg); }
+}
+
+.section { padding: 64px 0 8px; }
+.section h2 { font-size: clamp(32px, 7vw, 48px); font-weight: 800; letter-spacing: -.04em; line-height: 1.05; }
+.section-sub { margin-top: 8px; font-size: 19px; color: var(--gray); }
+
+/* ---------- Filtros ---------- */
+.chips { display: flex; gap: 8px; margin: 24px -20px 26px; padding: 4px 20px 8px; overflow-x: auto; scrollbar-width: none; }
+.chips::-webkit-scrollbar { display: none; }
+.chip-btn { flex: none; min-height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .08); font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; transition: transform .25s var(--spring), background .2s, color .2s; }
+.chip-btn:active { transform: scale(.95); }
+.chip-btn[aria-pressed="true"] { background: var(--ink); color: #fff; }
+
+/* ---------- Galería ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 22px; }
+.card { background: var(--card); border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 2px 14px rgba(0, 0, 0, .05); transition: transform .5s var(--spring), box-shadow .5s var(--spring), opacity .6s var(--spring); }
+.card.pre { opacity: 0; transform: translateY(30px); }
+@media (hover: hover) { .card:hover { transform: translateY(-8px) scale(1.012); box-shadow: 0 30px 50px -22px rgba(0, 0, 0, .28); } }
+.thumb { display: block; position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--bg); }
+.thumb-inner { position: absolute; top: 0; left: 0; width: 390px; transform-origin: top left; pointer-events: none; }
+.thumb img.cover { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb-link { position: absolute; inset: 0; z-index: 2; }
+.card-body { padding: 18px 22px 22px; display: grid; gap: 4px; }
+.tag { font-size: 13px; font-weight: 700; letter-spacing: .02em; color: var(--tag, var(--pink)); }
+.card h3 { font-size: 26px; font-weight: 700; letter-spacing: -.03em; }
+.card-cta { margin-top: 10px; display: inline-flex; align-items: center; gap: 4px; font-size: 17px; font-weight: 600; color: var(--blue); text-decoration: none; }
+.card-cta span { transition: transform .3s var(--spring); }
+.card:hover .card-cta span { transform: translateX(5px); }
+.empty { padding: 48px 16px; text-align: center; color: var(--gray); background: #fff; border-radius: 30px; }
+
+/* ---------- Borradores (lista estilo iOS) ---------- */
+.drafts { list-style: none; margin: 20px 0 0; padding: 0; background: #fff; border-radius: 24px; overflow: hidden; }
+.draft { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; padding: 16px 20px; }
+.draft + .draft { border-top: 1px solid var(--line); }
+.draft strong { display: block; font-size: 18px; font-weight: 600; overflow-wrap: anywhere; }
+.draft small { color: var(--gray); font-size: 14px; }
+.draft-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.notice { margin-top: 14px; padding: 14px 16px; border-radius: 16px; background: #FFF4D6; color: #6B4B00; font-size: 15px; }
+
+.site-foot { padding: 64px 0 72px; text-align: center; color: var(--gray); font-size: 14px; }
+
+/* ---------- Editor ---------- */
+.navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(255, 255, 255, .78); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid var(--line); }
+.navbar .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 52px; }
+.nav-back { justify-self: start; display: inline-flex; align-items: center; min-height: 44px; font-size: 17px; color: var(--blue); text-decoration: none; }
+.nav-title { text-align: center; line-height: 1.15; min-width: 0; }
+.nav-title strong { display: block; font-size: 16px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 46vw; }
+.nav-title small { font-size: 12px; color: var(--gray); }
+.nav-save { justify-self: end; min-height: 44px; padding: 0 4px; border: 0; background: none; font-size: 17px; font-weight: 600; color: var(--blue); cursor: pointer; }
+.editor { padding-top: 52px; }
+.editor-grid { width: min(1180px, 100% - 32px); margin: 20px auto 130px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.editor-grid > * { min-width: 0; }
+
+.group { background: var(--card); border-radius: 28px; padding: 22px 20px 8px; margin-bottom: 16px; box-shadow: 0 2px 14px rgba(0, 0, 0, .04); }
+.group > h3 { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); margin-bottom: 16px; }
+.field { display: grid; gap: 7px; margin-bottom: 18px; }
+.field > label, .field > span, .field-label { font-size: 15px; font-weight: 600; }
+.field input, .field textarea { width: 100%; min-height: 52px; padding: 13px 16px; border: 2px solid transparent; border-radius: 16px; background: var(--fill); color: var(--ink); font: inherit; font-size: 17px; transition: background .2s, border-color .2s, box-shadow .2s; -webkit-appearance: none; appearance: none; }
+.field textarea { resize: vertical; line-height: 1.4; }
+.field input:focus, .field textarea:focus { outline: none; background: #fff; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(10, 132, 255, .18); }
+.field small { color: var(--gray); font-size: 14px; line-height: 1.35; }
+.field small.err { color: var(--danger); font-weight: 600; }
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.photo-field { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.photo-thumb { width: 76px; height: 76px; border-radius: 22px; background: var(--fill); display: grid; place-items: center; color: var(--gray); font-size: 13px; overflow: hidden; }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.photo-field input[type=file] { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.photo-field label.btn { cursor: pointer; }
+.photo-field input[type=file]:focus-visible + label { outline: 3px solid rgba(10, 132, 255, .55); outline-offset: 2px; }
+.photo-field [hidden] { display: none; }
+
+.palettes { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 18px; }
+.dot { display: grid; justify-items: center; gap: 6px; padding: 0; border: 0; background: none; font-size: 13px; font-weight: 600; color: var(--gray); cursor: pointer; }
+.dot i { width: 54px; height: 54px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1); transition: transform .3s var(--spring), box-shadow .3s var(--spring); }
+.dot:hover i { transform: scale(1.08); }
+.dot[aria-checked="true"] i { box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--ink); }
+.dot[aria-checked="true"] { color: var(--ink); }
+
+.publish-note { font-size: 14px; color: var(--gray); padding-bottom: 14px; }
+
+.preview-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.preview-head p { font-size: 14px; font-weight: 600; color: var(--gray); }
+.phone { position: relative; width: 100%; max-width: 400px; margin-inline: auto; background: #1D1D1F; border-radius: 28px; overflow: hidden; box-shadow: 0 20px 50px -20px rgba(0, 0, 0, .35); }
+.phone-screen { width: 100%; background: #fff; }
+
+/* Teléfono: pestañas flotantes Editar / Vista previa */
+.tabs { position: fixed; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 40; display: flex; gap: 4px; padding: 5px; background: rgba(255, 255, 255, .8); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-radius: 999px; box-shadow: 0 10px 34px rgba(0, 0, 0, .2), 0 0 0 1px var(--line); }
+.tabs button { min-height: 44px; padding: 0 24px; border: 0; border-radius: 999px; background: transparent; color: var(--ink); font-size: 16px; font-weight: 600; cursor: pointer; transition: background .25s, color .25s; }
+.tabs button.is-active { background: var(--ink); color: #fff; }
+.editor[data-tab="edit"] .preview { display: none; }
+.editor[data-tab="preview"] .form { display: none; }
+
+/* Pantallas anchas: formulario y vista previa lado a lado */
+@media (min-width: 900px) {
+  .editor-grid { grid-template-columns: minmax(380px, 480px) 1fr; align-items: start; gap: 32px; margin-bottom: 56px; }
+  .editor[data-tab] .form, .editor[data-tab] .preview { display: block; }
+  .tabs { display: none; }
+  .preview { position: sticky; top: 76px; }
+  .phone { width: 372px; height: min(780px, calc(100vh - 290px)); border: 11px solid #1D1D1F; border-radius: 52px; background: #1D1D1F; }
+  .phone::before { content: ''; position: absolute; top: 9px; left: 50%; width: 92px; height: 26px; margin-left: -46px; border-radius: 99px; background: #000; z-index: 5; }
+  .phone-screen { height: 100%; overflow-y: auto; scrollbar-width: none; border-radius: 40px; }
+  .phone-screen::-webkit-scrollbar { display: none; }
+  .hero { padding-top: 96px; }
+  .mock-left { transform: translateX(42%) translateY(40px) rotate(-7deg); }
+  .mock-right { transform: translateX(-42%) translateY(40px) rotate(7deg); }
+}
+
+#toast { position: fixed; left: 50%; bottom: 96px; z-index: 80; transform: translate(-50%, 20px); max-width: min(92vw, 420px); padding: 13px 20px; border-radius: 999px; background: rgba(29, 29, 31, .92); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: #fff; font-size: 15px; font-weight: 500; text-align: center; opacity: 0; pointer-events: none; transition: opacity .3s, transform .4s var(--spring); }
+#toast.show { opacity: 1; transform: translate(-50%, 0); }
+@media (min-width: 900px) { #toast { bottom: 30px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .blobs i, .grad { animation: none; }
+  .card, .mock, .btn { transition: none; }
+}
+
+.preview-head .btn { flex: none; white-space: nowrap; }
+.tabs button { white-space: nowrap; }
+
+
+/* ---------- Stickers (bandeja y herramientas) ---------- */
+.dock { background: #fff; border-radius: 24px; padding: 12px 12px 10px; margin-bottom: 14px; box-shadow: 0 2px 14px rgba(0, 0, 0, .05); }
+.dock-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 0 4px 8px; }
+.dock-title span { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray); }
+.dock-title small { font-size: 13px; color: var(--gray); text-align: right; }
+.tray { display: flex; gap: 6px; overflow-x: auto; padding: 2px 2px 6px; scrollbar-width: none; }
+.tray::-webkit-scrollbar { display: none; }
+.tray button { flex: none; width: 48px; height: 48px; border: 0; border-radius: 15px; background: var(--fill); font-size: 26px; line-height: 1; cursor: pointer; transition: transform .25s var(--spring), background .2s; }
+.tray button:hover { background: #E8E8ED; }
+.tray button:active { transform: scale(.85); }
+.tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; padding: 10px 2px 0; border-top: 1px solid var(--line); }
+.tools[hidden] { display: none; }
+.tools .btn { min-height: 38px; min-width: 44px; padding: 0 14px; font-size: 18px; }
+.tools .btn-danger { font-size: 15px; margin-left: auto; }
+
+/* ---------- Hoja de publicación (pago) ---------- */
+.sheet-back { position: fixed; inset: 0; z-index: 90; display: flex; align-items: flex-end; justify-content: center; background: rgba(0, 0, 0, .4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: sheet-fade .25s ease; }
+.sheet { width: min(520px, 100%); max-height: 92vh; overflow-y: auto; background: #fff; border-radius: 30px 30px 0 0; padding: 26px 22px calc(26px + env(safe-area-inset-bottom)); animation: sheet-up .5s var(--spring); }
+@media (min-width: 700px) { .sheet-back { align-items: center; } .sheet { border-radius: 30px; } }
+@keyframes sheet-fade { from { opacity: 0; } }
+@keyframes sheet-up { from { transform: translateY(40px); opacity: 0; } }
+.sheet h2 { font-size: 28px; font-weight: 800; letter-spacing: -.035em; }
+.sheet .sub { margin-top: 4px; color: var(--gray); font-size: 16px; }
+.price { margin: 18px 0 6px; padding: 16px 18px; border-radius: 20px; background: var(--fill); display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.price span { color: var(--gray); font-size: 15px; }
+.price strong { font-size: 28px; font-weight: 800; letter-spacing: -.03em; }
+.price em { font-style: normal; font-size: 15px; color: var(--gray); }
+.psteps { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 14px; counter-reset: p; }
+.psteps li { counter-increment: p; position: relative; padding: 0 0 0 46px; }
+.psteps li::before { content: counter(p); position: absolute; left: 0; top: 0; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: #fff; font-weight: 700; font-size: 15px; }
+.psteps strong { display: block; font-size: 17px; }
+.psteps p { margin-top: 2px; font-size: 15px; color: var(--gray); line-height: 1.4; }
+.psteps .btn { margin-top: 10px; }
+.sheet .notice { font-size: 14px; }
+.sheet-close { margin-top: 18px; }
+
+
+/* ---------- Enlace único: invitado y "gracias" ---------- */
+.guest { min-height: 100vh; display: flex; flex-direction: column; align-items: center; background: var(--gbg, #111); }
+.guest-card { width: 100%; max-width: 440px; }
+.guest-cta { display: block; width: 100%; max-width: 440px; padding: 18px 20px calc(24px + env(safe-area-inset-bottom)); text-align: center; font-size: 15px; font-weight: 600; color: #fff; text-decoration: none; background: #1D1D1F; }
+.guest-msg { margin: auto; padding: 40px 28px; text-align: center; color: #fff; max-width: 360px; }
+.guest-msg h1 { font-size: 26px; font-weight: 800; letter-spacing: -.03em; }
+.guest-msg p { margin-top: 10px; opacity: .8; }
+.thanks { min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; background: #fff; position: relative; overflow: hidden; }
+.thanks .blobs i { opacity: .35; }
+.thanks-card { position: relative; width: min(460px, 100%); background: #fff; border-radius: 30px; padding: 30px 24px; text-align: center; box-shadow: 0 20px 60px -20px rgba(0,0,0,.25); }
+.thanks-card h1 { font-size: 30px; font-weight: 800; letter-spacing: -.035em; line-height: 1.1; }
+.thanks-card p { margin-top: 10px; color: var(--gray); }
+.spin { width: 44px; height: 44px; margin: 0 auto 18px; border-radius: 50%; border: 4px solid var(--fill); border-top-color: var(--pink); animation: spin 0.9s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.linkbox { margin: 18px 0 6px; padding: 14px 16px; border-radius: 16px; background: var(--fill); font-size: 15px; font-weight: 600; word-break: break-all; text-align: left; user-select: all; }
+.btn-col { display: grid; gap: 10px; margin-top: 14px; }
+.btn-wa { background: #25D366; color: #052E16; }
+.sheet .linkbox { margin-top: 14px; }
+.fine { font-size: 13px; color: var(--gray); margin-top: 10px; }
+@media (prefers-reduced-motion: reduce) { .spin { animation-duration: 3s; } }
+
+</style>
+  <style>
+/*
+ * templates.css — Estilos de las invitaciones.
+ *
+ * Todo vive bajo ".inv" para que ningún estilo de la plataforma afecte a la
+ * invitación (ni al revés). Cada plantilla es un "layout" (.tpl-confeti,
+ * .tpl-safari, .tpl-espacial, .tpl-gala, .tpl-lino). Los colores NO están
+ * escritos aquí: vienen de las variables de la paleta elegida
+ * (--bg, --paper, --ink, --muted, --accent, --accent-ink, --accent-2, --pop-1, --pop-2).
+ * Diseñadas para un ancho de teléfono (~390px).
+ */
+
+/* ---------- Base común ---------- */
+.inv { position: relative; overflow: hidden; background: var(--bg); color: var(--ink); text-align: center; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+.inv *, .inv *::before, .inv *::after { box-sizing: border-box; }
+.inv h1, .inv p { margin: 0; }
+.inv [hidden] { display: none !important; }
+
+.inv-hero { position: relative; padding: 46px 28px 30px; }
+.inv-deco { position: absolute; inset: 0; pointer-events: none; }
+.inv-hero > * { position: relative; }
+.inv-hero > .inv-deco, .inv-hero > .inv-floaters, .inv-hero > .inv-stickers { position: absolute; }
+.inv-kicker { font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+.inv-photo { width: 210px; height: 210px; margin: 0 auto 24px; overflow: hidden; background: var(--paper); cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transform: perspective(700px) rotate(var(--rot, 0deg)) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease; }
+.inv-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.inv-photo-empty { width: 100%; height: 100%; display: grid; place-items: end center; color: var(--accent-2); }
+.inv-photo-empty svg { width: 78%; height: 78%; }
+.inv-photo.wiggle { animation: inv-wiggle .6s ease; }
+.inv-names { font-size: 42px; line-height: 1.05; overflow-wrap: anywhere; margin-bottom: 10px; cursor: pointer; }
+.inv-motive { font-size: 20px; color: var(--accent); }
+
+.inv-block { position: relative; padding: 20px 28px; }
+.inv-label { font-size: 11px; letter-spacing: .24em; text-transform: uppercase; color: var(--muted); }
+.inv-message p { font-size: 17px; line-height: 1.65; overflow-wrap: anywhere; }
+
+.inv-details { display: grid; gap: 14px; }
+.inv-ico { display: none; }
+.inv-detail strong { display: block; margin-top: 5px; font-size: 19px; line-height: 1.25; overflow-wrap: anywhere; }
+
+.inv-count { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+.inv-count > div { padding: 12px 2px 10px; }
+.inv-count b { display: block; font-size: 28px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.inv-count span { display: block; margin-top: 3px; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.inv-count-done { margin-top: 10px; font-size: 22px; color: var(--accent); }
+.inv-count b.tick { animation: inv-tick .35s ease; }
+
+.inv-address { margin-top: 8px; font-size: 17px; line-height: 1.5; overflow-wrap: anywhere; }
+.inv-btn { display: inline-block; margin-top: 16px; padding: 14px 28px; background: var(--accent); color: var(--accent-ink); font-size: 15px; font-weight: 700; text-decoration: none; cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; -webkit-tap-highlight-color: transparent; }
+.inv-btn:active { transform: scale(.95); }
+.inv-btn.is-disabled { opacity: .35; cursor: default; }
+.inv-rsvp { padding-bottom: 8px; }
+.inv-foot { padding: 28px 0 32px; font-size: 11px; letter-spacing: .12em; color: var(--muted); opacity: .8; }
+
+/* Adornos que flotan (se revientan al tocarlos) */
+.inv-floaters { inset: 0; pointer-events: none; z-index: 3; }
+.inv-float { position: absolute; left: var(--x); top: var(--y); font-size: var(--s, 32px); line-height: 1; pointer-events: auto; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent;
+  animation: inv-bob var(--t, 5s) ease-in-out var(--d, 0s) infinite; filter: drop-shadow(0 6px 6px rgba(0,0,0,.18)); }
+.inv-float.pop { animation: inv-pop .4s ease-out forwards; }
+.inv-conf { position: absolute; z-index: 6; pointer-events: none; border-radius: 2px; }
+
+/* Entrada suave (solo cuando la invitación se "abre", no mientras se edita) */
+.inv-live .inv-hero > * { animation: inv-rise .8s cubic-bezier(.2,.8,.2,1) backwards; }
+.inv-live .inv-hero > .inv-deco, .inv-live .inv-hero > .inv-floaters, .inv-live .inv-hero > .inv-stickers { animation: none; }
+.inv-live .inv-hero > .inv-photo { animation-delay: .1s; }
+.inv-live .inv-hero > .inv-names { animation-delay: .2s; }
+.inv-live .inv-hero > .inv-motive { animation-delay: .3s; }
+.inv-live .reveal { opacity: 0; transform: translateY(26px) scale(.97); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i, 0) * 90ms); }
+.inv-live .reveal.in { opacity: 1; transform: none; }
+
+@keyframes inv-rise { from { opacity: 0; transform: translateY(18px) scale(.96); } }
+@keyframes inv-bob { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-12px) rotate(5deg); } }
+@keyframes inv-pop { 0% { transform: scale(1); } 35% { transform: scale(1.6); } 100% { transform: scale(0); opacity: 0; } }
+@keyframes inv-wiggle { 0%, 100% { scale: 1; } 25% { scale: 1.07; rotate: -5deg; } 60% { scale: 1.05; rotate: 4deg; } }
+@keyframes inv-tick { 40% { transform: scale(1.18); } }
+@keyframes inv-spin { to { transform: translateX(-50%) rotate(360deg); } }
+@keyframes inv-twinkle { 0%, 100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes inv-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .inv *, .inv *::before, .inv *::after { animation: none !important; transition: none !important; }
+  .inv-live .reveal { opacity: 1; transform: none; }
+}
+/* Las miniaturas de la galería no se animan */
+.thumb .inv *, .thumb .inv *::before, .thumb .inv *::after { animation: none !important; }
+
+/* =====================================================
+   Plantilla 1: Fiesta Confeti (infantil) — arcoíris y banderines
+   ===================================================== */
+.tpl-confeti { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 12% 2%, color-mix(in srgb, var(--accent-2) 38%, transparent), transparent 42%),
+    radial-gradient(circle at 92% 18%, color-mix(in srgb, var(--pop-1) 28%, transparent), transparent 40%),
+    radial-gradient(circle at 8% 70%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 40%),
+    var(--bg); }
+.tpl-confeti .inv-hero { padding-top: 70px; }
+.tpl-confeti .inv-deco {
+  height: 50px; bottom: auto;
+  background:
+    conic-gradient(from 150deg at 26px 0, var(--accent) 60deg, transparent 0) 0 6px / 156px 44px repeat-x,
+    conic-gradient(from 150deg at 26px 0, var(--accent-2) 60deg, transparent 0) 52px 6px / 156px 44px repeat-x,
+    conic-gradient(from 150deg at 26px 0, var(--pop-1) 60deg, transparent 0) 104px 6px / 156px 44px repeat-x,
+    linear-gradient(var(--muted), var(--muted)) 0 0 / 100% 2px no-repeat;
+}
+.tpl-confeti .inv-hero::before { content: ''; position: absolute; left: 50%; top: 66px; width: 330px; height: 330px; transform: translateX(-50%); border-radius: 50%;
+  background: radial-gradient(circle, transparent 0 112px, var(--accent) 112px 122px, var(--accent-2) 122px 132px, var(--pop-2) 132px 142px, var(--pop-1) 142px 152px, transparent 152px); opacity: .9; }
+.tpl-confeti .inv-kicker { display: inline-block; padding: 8px 18px; border-radius: 999px; background: var(--paper); color: var(--accent); letter-spacing: .1em; font-weight: 600; box-shadow: 0 4px 0 var(--accent-2); }
+.tpl-confeti .inv-photo { margin-bottom: 62px; border-radius: 50%; border: 6px solid var(--paper); box-shadow: 0 16px 30px rgba(0,0,0,.18); }
+.tpl-confeti .inv-names { font-family: 'Baloo 2', 'Fredoka', system-ui, sans-serif; font-size: 60px; font-weight: 800; letter-spacing: -.01em; line-height: 1;
+  background: linear-gradient(90deg, var(--accent), var(--pop-1) 55%, var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 4px; }
+.tpl-confeti .inv-motive { font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 26px; font-weight: 700; color: var(--ink); }
+.tpl-confeti .inv-message { padding: 14px 22px; }
+.tpl-confeti .inv-message p { padding: 22px 20px; border-radius: 30px; background: var(--paper); font-size: 18px; box-shadow: 0 7px 0 var(--pop-1); }
+.tpl-confeti .inv-details { gap: 16px; padding: 22px; }
+.tpl-confeti .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 26px; background: var(--paper); text-align: left; box-shadow: 0 6px 0 var(--accent); }
+.tpl-confeti .inv-detail:nth-child(2) { box-shadow: 0 6px 0 var(--accent-2); }
+.tpl-confeti .inv-detail:nth-child(3) { box-shadow: 0 6px 0 var(--pop-2); }
+.tpl-confeti .inv-ico { display: grid; place-items: center; flex: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; background: color-mix(in srgb, var(--accent) 18%, white); }
+.tpl-confeti .inv-detail:nth-child(2) .inv-ico { background: color-mix(in srgb, var(--accent-2) 30%, white); }
+.tpl-confeti .inv-detail:nth-child(3) .inv-ico { background: color-mix(in srgb, var(--pop-2) 24%, white); }
+.tpl-confeti .inv-detail strong { font-size: 19px; font-weight: 600; margin-top: 2px; }
+.tpl-confeti .inv-label { font-weight: 600; letter-spacing: .14em; color: var(--muted); }
+.tpl-confeti .inv-count > div { border-radius: 22px; color: #fff; padding: 14px 2px 11px; box-shadow: 0 5px 0 rgba(0,0,0,.14); }
+.tpl-confeti .inv-count > div:nth-child(1) { background: var(--accent); }
+.tpl-confeti .inv-count > div:nth-child(2) { background: var(--pop-1); }
+.tpl-confeti .inv-count > div:nth-child(3) { background: var(--pop-2); }
+.tpl-confeti .inv-count > div:nth-child(4) { background: var(--accent-2); color: var(--ink); }
+.tpl-confeti .inv-count b { font-family: 'Baloo 2', 'Fredoka', sans-serif; font-weight: 800; font-size: 32px; }
+.tpl-confeti .inv-count span { color: inherit; opacity: .85; font-weight: 600; }
+.tpl-confeti .inv-address { font-weight: 500; }
+.tpl-confeti .inv-btn { border-radius: 999px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: 0 6px 0 rgba(0,0,0,.18); font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 19px; font-weight: 700; padding: 13px 32px; }
+.tpl-confeti .inv-btn:active { box-shadow: 0 2px 0 rgba(0,0,0,.18); transform: translateY(4px); }
+.tpl-confeti .inv-btn-main { animation: inv-pulse 2.4s ease-in-out infinite; }
+
+/* =====================================================
+   Plantilla 2: Safari Aventura (infantil) — sol, rayos y selva
+   ===================================================== */
+.tpl-safari { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  background:
+    radial-gradient(circle at 100% 38%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 34%),
+    radial-gradient(circle at 0% 62%, color-mix(in srgb, var(--pop-2) 18%, transparent), transparent 36%),
+    var(--bg); }
+.tpl-safari .inv-hero { padding-top: 50px; }
+.tpl-safari .inv-deco {
+  background:
+    radial-gradient(circle 54px at 50% 215px, var(--accent-2) 0 96%, transparent),
+    repeating-conic-gradient(from 0deg at 50% 215px, color-mix(in srgb, var(--accent-2) 55%, transparent) 0 9deg, transparent 9deg 18deg);
+  -webkit-mask-image: radial-gradient(circle at 50% 215px, #000 18%, transparent 62%); mask-image: radial-gradient(circle at 50% 215px, #000 18%, transparent 62%);
+  opacity: .55;
+}
+.tpl-safari .inv-kicker { display: inline-block; padding: 8px 18px; border-radius: 14px; background: var(--accent); color: var(--accent-ink); letter-spacing: .08em; font-weight: 600; transform: rotate(-2deg); }
+.tpl-safari .inv-photo { --rot: -4deg; width: 214px; height: 214px; border-radius: 34%; border: 7px solid var(--paper); box-shadow: 0 10px 0 var(--accent), 0 22px 34px rgba(0,0,0,.22); margin-bottom: 30px; }
+.tpl-safari .inv-photo-empty { background: color-mix(in srgb, var(--accent-2) 30%, white); color: var(--accent); }
+.tpl-safari .inv-names { font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 62px; font-weight: 800; line-height: 1; color: var(--accent); text-shadow: 3px 3px 0 var(--accent-2), 6px 6px 0 color-mix(in srgb, var(--pop-1) 40%, transparent); }
+.tpl-safari .inv-motive { display: inline-block; margin-top: 10px; padding: 6px 20px; border-radius: 999px; background: var(--accent-2); color: var(--ink); font-size: 21px; font-weight: 600; }
+.tpl-safari .inv-message { padding: 16px 24px; }
+.tpl-safari .inv-message p { padding: 22px 20px; border-radius: 28px; background: var(--paper); border: 3px solid var(--accent); font-size: 18px; position: relative; }
+.tpl-safari .inv-details { gap: 12px; padding: 18px 24px; }
+.tpl-safari .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 24px; background: var(--accent); color: #fff; text-align: left; }
+.tpl-safari .inv-detail:nth-child(2) { background: var(--pop-1); }
+.tpl-safari .inv-detail:nth-child(3) { background: var(--pop-2); }
+.tpl-safari .inv-ico { display: grid; place-items: center; flex: none; width: 50px; height: 50px; border-radius: 50%; background: rgba(255,255,255,.9); font-size: 24px; }
+.tpl-safari .inv-detail .inv-label { color: rgba(255,255,255,.85); font-weight: 600; }
+.tpl-safari .inv-detail strong { font-size: 20px; font-weight: 600; margin-top: 2px; }
+.tpl-safari .inv-count > div { border: 3px dashed var(--accent); border-radius: 20px; background: var(--paper); padding: 12px 2px 10px; }
+.tpl-safari .inv-count b { font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent); }
+.tpl-safari .inv-count > div:nth-child(even) b { color: var(--pop-1); }
+.tpl-safari .inv-address { font-weight: 500; }
+.tpl-safari .inv-btn { border-radius: 20px; font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 19px; font-weight: 700; padding: 13px 30px; box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 55%, black); }
+.tpl-safari .inv-btn:active { box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 55%, black); transform: translateY(4px); }
+.tpl-safari .inv-btn-main { background: var(--pop-1); box-shadow: 0 6px 0 color-mix(in srgb, var(--pop-1) 55%, black); animation: inv-pulse 2.4s ease-in-out infinite; }
+
+/* =====================================================
+   Plantilla 3: Misión Espacial (infantil) — estrellas, órbita y cristal
+   ===================================================== */
+.tpl-espacial { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  background:
+    radial-gradient(1.5px 1.5px at 22px 34px, #fff, transparent),
+    radial-gradient(2px 2px at 120px 86px, #fff, transparent),
+    radial-gradient(1px 1px at 204px 150px, #fff, transparent),
+    radial-gradient(2px 2px at 300px 44px, var(--accent-2), transparent),
+    radial-gradient(1.5px 1.5px at 344px 212px, #fff, transparent),
+    radial-gradient(1px 1px at 70px 214px, var(--pop-1), transparent),
+    var(--bg);
+  background-size: 360px 260px; }
+.tpl-espacial .inv-hero { padding-top: 54px; }
+.tpl-espacial .inv-deco {
+  background:
+    radial-gradient(circle at 85% 8%, color-mix(in srgb, var(--accent) 45%, transparent), transparent 46%),
+    radial-gradient(circle at 8% 38%, color-mix(in srgb, var(--pop-1) 30%, transparent), transparent 44%);
+}
+.tpl-espacial .inv-hero::before { content: ''; position: absolute; left: 50%; top: 84px; width: 300px; height: 300px; margin-left: 0; transform: translateX(-50%); border-radius: 50%;
+  border: 2px dashed color-mix(in srgb, var(--pop-1) 70%, transparent);
+  background: radial-gradient(circle 11px at 50% 0, var(--accent-2) 0 96%, transparent);
+  animation: inv-spin 22s linear infinite; }
+.tpl-espacial .inv-kicker { display: inline-block; padding: 8px 18px; border-radius: 999px; background: color-mix(in srgb, #fff 10%, transparent); border: 1px solid color-mix(in srgb, #fff 22%, transparent); color: var(--accent-2); letter-spacing: .12em; font-weight: 600; }
+.tpl-espacial .inv-photo { width: 200px; height: 200px; border-radius: 50%; border: 5px solid var(--accent-2); box-shadow: 0 0 0 8px color-mix(in srgb, var(--accent) 35%, transparent), 0 0 50px color-mix(in srgb, var(--accent) 60%, transparent); margin: 22px auto 58px; }
+.tpl-espacial .inv-photo-empty { background: var(--paper); color: var(--pop-1); }
+.tpl-espacial .inv-names { font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 62px; font-weight: 800; line-height: 1;
+  background: linear-gradient(90deg, var(--accent-2), var(--pop-2) 50%, var(--pop-1)); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: 4px; }
+.tpl-espacial .inv-motive { font-family: 'Baloo 2', sans-serif; font-size: 25px; font-weight: 700; color: var(--ink); }
+.tpl-espacial .inv-message { padding: 14px 24px; }
+.tpl-espacial .inv-message p { padding: 22px 20px; border-radius: 26px; font-size: 18px; background: color-mix(in srgb, #fff 8%, transparent); border: 1px solid color-mix(in srgb, #fff 16%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.tpl-espacial .inv-details { gap: 12px; padding: 18px 24px; }
+.tpl-espacial .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 24px; text-align: left; background: color-mix(in srgb, #fff 8%, transparent); border: 1px solid color-mix(in srgb, #fff 16%, transparent); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.tpl-espacial .inv-ico { display: grid; place-items: center; flex: none; width: 50px; height: 50px; border-radius: 50%; font-size: 24px; background: color-mix(in srgb, var(--accent) 55%, transparent); }
+.tpl-espacial .inv-detail:nth-child(2) .inv-ico { background: color-mix(in srgb, var(--pop-1) 50%, transparent); }
+.tpl-espacial .inv-detail:nth-child(3) .inv-ico { background: color-mix(in srgb, var(--pop-2) 50%, transparent); }
+.tpl-espacial .inv-label { color: var(--muted); font-weight: 600; }
+.tpl-espacial .inv-detail strong { font-size: 20px; font-weight: 600; margin-top: 2px; }
+.tpl-espacial .inv-count > div { border-radius: 20px; background: color-mix(in srgb, #fff 8%, transparent); border: 1px solid color-mix(in srgb, #fff 18%, transparent); padding: 13px 2px 10px; }
+.tpl-espacial .inv-count b { font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent-2); text-shadow: 0 0 18px color-mix(in srgb, var(--accent-2) 70%, transparent); }
+.tpl-espacial .inv-count > div:nth-child(2) b { color: var(--pop-1); text-shadow: 0 0 18px color-mix(in srgb, var(--pop-1) 70%, transparent); }
+.tpl-espacial .inv-count > div:nth-child(3) b { color: var(--pop-2); text-shadow: 0 0 18px color-mix(in srgb, var(--pop-2) 70%, transparent); }
+.tpl-espacial .inv-count > div:nth-child(4) b { color: #fff; text-shadow: 0 0 18px #fff; }
+.tpl-espacial .inv-btn { border-radius: 999px; background: linear-gradient(135deg, var(--accent), var(--pop-2)); font-family: 'Baloo 2', sans-serif; font-size: 19px; font-weight: 700; padding: 13px 32px; box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 55%, transparent); }
+.tpl-espacial .inv-btn-main { animation: inv-pulse 2.4s ease-in-out infinite; }
+
+/* =====================================================
+   Plantilla 4: XV Dorado (gala)
+   ===================================================== */
+.tpl-gala { font-family: 'Cormorant Garamond', Georgia, serif; }
+.tpl-gala::before { content: ''; position: absolute; inset: 10px; border: 1px solid var(--accent); opacity: .55; pointer-events: none; z-index: 1; }
+.tpl-gala .inv-hero { padding-top: 58px; }
+.tpl-gala .inv-deco { background: radial-gradient(ellipse 80% 55% at 50% 30%, var(--paper) 0%, transparent 72%); }
+.tpl-gala .inv-kicker { font-family: 'Cinzel', Georgia, serif; font-size: 11px; letter-spacing: .34em; color: var(--accent); }
+.tpl-gala .inv-photo { width: 220px; height: 280px; border-radius: 110px 110px 6px 6px; outline: 1px solid var(--accent); outline-offset: 8px; margin-bottom: 30px; }
+.tpl-gala .inv-photo-empty { background: var(--paper); }
+.tpl-gala .inv-names { font-family: 'Cinzel', Georgia, serif; font-size: 31px; font-weight: 500; letter-spacing: .06em; line-height: 1.2; color: var(--ink); text-transform: uppercase; }
+.tpl-gala .inv-motive { margin-top: 6px; font-size: 30px; font-style: italic; font-weight: 500; color: var(--accent); }
+.tpl-gala .inv-float { filter: none; font-size: calc(var(--s) * .6); opacity: .9; }
+.tpl-gala .inv-message { padding-top: 14px; }
+.tpl-gala .inv-message::before, .tpl-gala .inv-details::before { content: ''; display: block; width: 46px; height: 1px; margin: 0 auto 22px; background: var(--accent); }
+.tpl-gala .inv-message p { font-size: 21px; font-style: italic; line-height: 1.55; color: var(--ink); }
+.tpl-gala .inv-details { gap: 0; padding-top: 16px; }
+.tpl-gala .inv-details::before { margin-bottom: 14px; }
+.tpl-gala .inv-detail { padding: 14px 0; border-bottom: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+.tpl-gala .inv-detail:last-child { border-bottom: 0; }
+.tpl-gala .inv-label { font-family: 'Cinzel', Georgia, serif; font-size: 10px; color: var(--accent); }
+.tpl-gala .inv-detail strong { font-size: 23px; font-weight: 500; }
+.tpl-gala .inv-count > div { border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); background: transparent; padding: 14px 2px 11px; }
+.tpl-gala .inv-count b { font-family: 'Cinzel', Georgia, serif; font-weight: 500; font-size: 26px; color: var(--accent); }
+.tpl-gala .inv-count span { font-family: 'Cinzel', Georgia, serif; }
+.tpl-gala .inv-address { font-size: 20px; font-style: italic; }
+.tpl-gala .inv-btn { font-family: 'Cinzel', Georgia, serif; font-size: 12px; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; border-radius: 0; padding: 15px 30px; }
+.tpl-gala .inv-foot { position: relative; z-index: 2; }
+
+/* =====================================================
+   Plantilla 5: Boda Lino (editorial)
+   ===================================================== */
+.tpl-lino { font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; }
+.tpl-lino .inv-hero { padding: 54px 34px 26px; }
+.tpl-lino .inv-kicker { font-size: 11px; letter-spacing: .3em; color: var(--accent); }
+.tpl-lino .inv-photo { width: 230px; height: 290px; border-radius: 2px; margin-bottom: 34px; box-shadow: 14px 14px 0 var(--accent-2); }
+.tpl-lino .inv-photo-empty { background: var(--paper); }
+.tpl-lino .inv-names { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 56px; font-style: italic; font-weight: 500; line-height: .98; letter-spacing: -.01em; }
+.tpl-lino .inv-motive { margin-top: 12px; font-size: 12px; font-weight: 500; letter-spacing: .34em; text-transform: uppercase; color: var(--muted); }
+.tpl-lino .inv-message { padding: 26px 40px 18px; }
+.tpl-lino .inv-message p { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; line-height: 1.5; color: var(--ink); }
+.tpl-lino .inv-details { margin: 10px 28px; padding: 6px 0; border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent); gap: 0; }
+.tpl-lino .inv-detail { padding: 15px 0; }
+.tpl-lino .inv-detail + .inv-detail { border-top: 1px solid var(--accent-2); }
+.tpl-lino .inv-detail strong { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 24px; font-weight: 500; }
+.tpl-lino .inv-countdown { padding-top: 26px; }
+.tpl-lino .inv-count { gap: 0; }
+.tpl-lino .inv-count > div + div { border-left: 1px solid var(--accent-2); }
+.tpl-lino .inv-count b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 40px; font-weight: 500; font-style: italic; color: var(--ink); }
+.tpl-lino .inv-address { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; }
+.tpl-lino .inv-btn { border-radius: 0; background: transparent; color: var(--ink); border: 1px solid var(--ink); font-size: 12px; font-weight: 500; letter-spacing: .24em; text-transform: uppercase; padding: 15px 30px; }
+.tpl-lino .inv-btn-main { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+
+/* =====================================================
+   STICKERS (se agregan y se arrastran en el editor)
+   Estilo "troquelado": borde blanco alrededor, como un sticker de papel.
+   ===================================================== */
+.inv-stickers { inset: 0; z-index: 5; pointer-events: none; }
+.inv-st { position: absolute; left: 50%; top: 50%; font-size: var(--ss, 56px); line-height: 1; translate: -50% -50%; rotate: var(--sr, 0deg);
+  pointer-events: auto; cursor: pointer; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  filter: drop-shadow(2.5px 0 0 #fff) drop-shadow(-2.5px 0 0 #fff) drop-shadow(0 2.5px 0 #fff) drop-shadow(0 -2.5px 0 #fff) drop-shadow(0 6px 5px rgba(0,0,0,.28)); }
+.inv-edit .inv-st { cursor: grab; touch-action: none; }
+.inv-edit .inv-st:active { cursor: grabbing; }
+.inv-st.sel { outline: 2px dashed var(--accent); outline-offset: 6px; border-radius: 12px; }
+.inv-st.bounce { animation: inv-bounce .55s ease; }
+@keyframes inv-bounce { 0% { transform: scale(1); } 35% { transform: scale(1.4) rotate(-10deg); } 70% { transform: scale(.92) rotate(6deg); } 100% { transform: scale(1); } }
+.thumb .inv-st { transition: none; }
+
+.inv-age { position: relative; }
+.inv-photo-none { display: none; }
+
+/* =====================================================
+   Baby Shower Granja — cuadros vichy y tarjeta en arco
+   ===================================================== */
+.tpl-granja { font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; }
+.tpl-granja .inv-hero { min-height: 740px; padding: 126px 58px 220px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--pop-1) 62%, transparent) 0 40px, transparent 40px 80px),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--pop-2) 58%, transparent) 0 40px, transparent 40px 80px),
+    #FBF9F4; }
+.tpl-granja .inv-hero::before { content: ''; position: absolute; left: 24px; right: 24px; top: 70px; bottom: 96px; background: var(--paper);
+  border-radius: 999px 999px 26px 26px; box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 38%, white), 0 22px 40px rgba(60, 40, 20, .18); }
+.tpl-granja .inv-deco { display: none; }
+.tpl-granja .inv-kicker { font-size: 12px; letter-spacing: .32em; color: var(--accent); margin-bottom: 14px; font-weight: 500; }
+.tpl-granja .inv-photo { width: 124px; height: 124px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 8px 16px rgba(0,0,0,.18); margin-bottom: 14px; }
+.tpl-granja .inv-names { font-family: 'Great Vibes', 'Brush Script MT', cursive; font-size: 56px; font-weight: 400; line-height: 1; color: var(--ink); margin-bottom: 8px; }
+.tpl-granja .inv-motive { font-size: 14px; letter-spacing: .34em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.tpl-granja .inv-message p { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 23px; font-style: italic; line-height: 1.45; color: var(--ink); }
+.tpl-granja .inv-details { gap: 12px; padding: 18px 26px; }
+.tpl-granja .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 22px; border-left: 8px solid var(--accent); box-shadow: 0 6px 16px rgba(60,40,20,.08); }
+.tpl-granja .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: color-mix(in srgb, var(--pop-1) 40%, white); }
+.tpl-granja .inv-detail strong { font-size: 19px; font-weight: 500; margin-top: 2px; }
+.tpl-granja .inv-count > div { background: var(--paper); border-radius: 18px; box-shadow: 0 6px 16px rgba(60,40,20,.08); border-bottom: 5px solid var(--accent); }
+.tpl-granja .inv-count b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: var(--accent); }
+.tpl-granja .inv-address { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; }
+.tpl-granja .inv-btn { border-radius: 999px; font-weight: 600; box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 60%, black); }
+.tpl-granja .inv-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 60%, black); }
+
+/* =====================================================
+   Cóctel Rosa — rayas verdes y tarjeta rosa troquelada
+   ===================================================== */
+.tpl-coctel { font-family: 'Jost', 'Helvetica Neue', Arial, sans-serif; }
+.tpl-coctel .inv-hero { min-height: 700px; padding: 140px 62px 200px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  background: repeating-linear-gradient(90deg, var(--pop-1) 0 22px, var(--bg) 22px 44px); }
+.tpl-coctel .inv-hero::before { content: ''; position: absolute; left: 26px; right: 26px; top: 64px; bottom: 90px; background: var(--pop-2); border-radius: 46px;
+  box-shadow: 0 0 0 7px #fff, 0 22px 40px rgba(60,30,40,.25); }
+.tpl-coctel .inv-hero::after { content: ''; position: absolute; left: 40px; right: 40px; top: 78px; bottom: 104px; border: 2px dashed rgba(255,255,255,.75); border-radius: 36px; pointer-events: none; }
+.tpl-coctel .inv-deco { display: none; }
+.tpl-coctel .inv-kicker { font-size: 11px; letter-spacing: .34em; color: var(--accent); margin-bottom: 10px; font-weight: 500; }
+.tpl-coctel .inv-photo { width: 120px; height: 120px; border-radius: 50%; border: 5px solid #fff; box-shadow: 0 8px 16px rgba(0,0,0,.2); margin-bottom: 14px; }
+.tpl-coctel .inv-names { font-family: 'Great Vibes', 'Brush Script MT', cursive; font-size: 56px; overflow-wrap: break-word; font-weight: 400; line-height: .95; color: var(--ink); margin-bottom: 6px; }
+.tpl-coctel .inv-motive { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; letter-spacing: .3em; text-transform: uppercase; color: var(--ink); font-weight: 500; }
+.tpl-coctel .inv-age { margin-top: 8px; font-family: 'Great Vibes', cursive; font-size: 76px; line-height: 1; color: var(--accent-2); }
+.tpl-coctel .inv-message p { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; font-style: italic; line-height: 1.45; }
+.tpl-coctel .inv-details { gap: 12px; padding: 18px 26px; }
+.tpl-coctel .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 26px; box-shadow: 0 0 0 4px var(--pop-2), 0 8px 18px rgba(60,30,40,.12); }
+.tpl-coctel .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: var(--pop-2); }
+.tpl-coctel .inv-detail strong { font-size: 19px; font-weight: 500; margin-top: 2px; }
+.tpl-coctel .inv-count > div { background: var(--pop-2); border-radius: 18px; box-shadow: 0 0 0 3px #fff, 0 6px 14px rgba(60,30,40,.15); }
+.tpl-coctel .inv-count b { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 34px; font-weight: 600; color: var(--ink); }
+.tpl-coctel .inv-count span { color: var(--ink); opacity: .7; }
+.tpl-coctel .inv-address { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; }
+.tpl-coctel .inv-btn { border-radius: 999px; font-weight: 600; letter-spacing: .04em; box-shadow: 0 0 0 4px #fff, 0 8px 18px rgba(60,30,40,.25); }
+
+/* =====================================================
+   Collage Rosa — nombre con letras recortadas, estilo scrapbook
+   ===================================================== */
+.tpl-collage { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif; }
+.tpl-collage .inv-hero { min-height: 760px; padding: 110px 18px 70px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+  background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 26px, transparent 26px 52px),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.6) 0 26px, transparent 26px 52px),
+    var(--pop-2); }
+.tpl-collage .inv-hero::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 56%;
+  background: repeating-linear-gradient(90deg, var(--accent) 0 16px, color-mix(in srgb, var(--accent) 38%, white) 16px 32px);
+  clip-path: polygon(0 16%, 100% 0, 100% 100%, 0 100%); }
+.tpl-collage .inv-deco { display: none; }
+.tpl-collage .inv-kicker { order: 1; display: inline-block; padding: 6px 16px; border-radius: 10px; background: #fff; color: var(--accent); font-weight: 600; letter-spacing: .14em; transform: rotate(-3deg); margin-bottom: 16px; box-shadow: 0 5px 10px rgba(0,0,0,.18); }
+.tpl-collage .inv-names { order: 2; display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 3px; margin: 0 0 10px; cursor: pointer; }
+.tpl-collage .l { display: inline-grid; place-items: center; min-width: .78em; padding: .02em .1em; font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 54px; font-weight: 800; line-height: 1.05;
+  background: #fff; color: var(--accent); box-shadow: 0 0 0 3px #fff, 0 7px 10px rgba(0,0,0,.22); transform: rotate(var(--lr, 0deg)); }
+.tpl-collage .l:nth-child(4n+1) { --lr: -5deg; }
+.tpl-collage .l:nth-child(4n+2) { --lr: 4deg; background: var(--accent); color: #fff; }
+.tpl-collage .l:nth-child(4n+3) { --lr: -3deg; background: var(--accent-2); color: var(--ink); font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 60px; }
+.tpl-collage .l:nth-child(4n) { --lr: 6deg; background: var(--pop-1); color: #fff; }
+.tpl-collage .l:nth-child(5n+2) { border-radius: 14px; }
+.tpl-collage .sp { width: 14px; }
+.tpl-collage .inv-motive { order: 3; font-family: 'Dancing Script', 'Brush Script MT', cursive; font-size: 34px; font-weight: 700; color: var(--accent); background: #fff; padding: 0 16px; border-radius: 12px; transform: rotate(-2deg); box-shadow: 0 6px 12px rgba(0,0,0,.18); }
+.tpl-collage .inv-age { order: 4; margin-top: 8px; font-family: 'Baloo 2', 'Fredoka', sans-serif; font-size: 150px; font-weight: 800; line-height: 1; color: transparent;
+  background: linear-gradient(135deg, #fff 0%, var(--accent) 30%, color-mix(in srgb, var(--accent) 45%, white) 52%, #fff 66%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(4px 0 0 #fff) drop-shadow(-4px 0 0 #fff) drop-shadow(0 4px 0 #fff) drop-shadow(0 -4px 0 #fff) drop-shadow(0 10px 8px rgba(0,0,0,.25)); }
+.tpl-collage .inv-photo { order: 5; align-self: flex-end; width: 150px; height: 180px; margin: -30px 16px 0 0; border: 6px solid #fff; border-radius: 22px; transform: rotate(5deg); box-shadow: 0 10px 18px rgba(0,0,0,.25); }
+.tpl-collage .inv-block { padding-inline: 24px; }
+.tpl-collage .inv-message p { padding: 20px; border-radius: 26px; background: var(--paper); font-size: 18px; box-shadow: 0 6px 0 var(--accent-2); }
+.tpl-collage .inv-details { gap: 12px; }
+.tpl-collage .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 22px; box-shadow: 0 6px 0 var(--accent); }
+.tpl-collage .inv-detail:nth-child(2) { box-shadow: 0 6px 0 var(--pop-1); }
+.tpl-collage .inv-detail:nth-child(3) { box-shadow: 0 6px 0 var(--accent-2); }
+.tpl-collage .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: color-mix(in srgb, var(--accent) 16%, white); }
+.tpl-collage .inv-detail strong { font-size: 19px; font-weight: 600; margin-top: 2px; }
+.tpl-collage .inv-count > div { border-radius: 18px; background: var(--paper); box-shadow: 0 5px 0 var(--accent-2); }
+.tpl-collage .inv-count b { font-family: 'Baloo 2', sans-serif; font-size: 32px; font-weight: 800; color: var(--accent); }
+.tpl-collage .inv-btn { border-radius: 999px; font-family: 'Baloo 2', sans-serif; font-size: 19px; font-weight: 700; box-shadow: 0 6px 0 color-mix(in srgb, var(--accent) 55%, black); }
+.tpl-collage .inv-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 color-mix(in srgb, var(--accent) 55%, black); }
+
+/* =====================================================
+   Noche de Halloween — luna, telarañas y brillo naranja
+   ===================================================== */
+.tpl-halloween { font-family: 'Fredoka', 'Trebuchet MS', system-ui, sans-serif;
+  background: radial-gradient(ellipse 90% 40% at 50% 0, color-mix(in srgb, var(--pop-1) 38%, var(--bg)) 0%, var(--bg) 70%); }
+.tpl-halloween .inv-hero { min-height: 700px; padding: 90px 24px 190px; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+.tpl-halloween .inv-deco {
+  background:
+    radial-gradient(circle 36px at 85% 10%, #FFF1BD 0 96%, transparent 100%),
+    radial-gradient(circle 110px at 85% 10%, rgba(255, 220, 130, .30), transparent 72%),
+    radial-gradient(ellipse 120% 34% at 50% 100%, color-mix(in srgb, var(--pop-1) 45%, transparent), transparent 72%);
+}
+.tpl-halloween .inv-kicker { display: inline-block; padding: 8px 18px; border-radius: 999px; border: 1.5px solid var(--accent); color: var(--accent); letter-spacing: .16em; font-weight: 600; margin-bottom: 20px; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.tpl-halloween .inv-photo { width: 190px; height: 230px; border-radius: 95px 95px 12px 12px; border: 4px solid var(--accent); box-shadow: 0 0 36px color-mix(in srgb, var(--accent) 60%, transparent); margin-bottom: 24px; }
+.tpl-halloween .inv-names { font-family: 'Creepster', 'Fredoka', system-ui, sans-serif; font-size: 66px; font-weight: 400; letter-spacing: .02em; line-height: 1; color: var(--accent);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--accent) 75%, transparent), 3px 3px 0 #000; margin-bottom: 12px; }
+.tpl-halloween .inv-motive { font-size: 22px; font-weight: 600; color: var(--ink); }
+.tpl-halloween .inv-message p { padding: 22px 20px; border-radius: 26px; font-size: 18px; background: color-mix(in srgb, #fff 7%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.tpl-halloween .inv-details { gap: 12px; padding: 18px 26px; }
+.tpl-halloween .inv-detail { display: flex; align-items: center; gap: 14px; padding: 14px 16px; text-align: left; background: var(--paper); border-radius: 22px; border-left: 6px solid var(--accent); box-shadow: 0 0 22px color-mix(in srgb, var(--accent) 18%, transparent); }
+.tpl-halloween .inv-ico { display: grid; place-items: center; flex: none; width: 46px; height: 46px; border-radius: 50%; font-size: 22px; background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.tpl-halloween .inv-label { color: var(--muted); font-weight: 600; }
+.tpl-halloween .inv-detail strong { font-size: 19px; font-weight: 600; margin-top: 2px; }
+.tpl-halloween .inv-count > div { border-radius: 18px; background: var(--paper); border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent); }
+.tpl-halloween .inv-count b { font-family: 'Creepster', 'Fredoka', sans-serif; font-size: 38px; font-weight: 400; color: var(--accent); text-shadow: 0 0 16px color-mix(in srgb, var(--accent) 80%, transparent); }
+.tpl-halloween .inv-btn { border-radius: 999px; font-family: 'Creepster', 'Fredoka', sans-serif; font-size: 23px; font-weight: 400; letter-spacing: .05em; padding: 12px 34px; box-shadow: 0 0 28px color-mix(in srgb, var(--accent) 65%, transparent); }
+.tpl-halloween .inv-btn-main { animation: inv-pulse 2.4s ease-in-out infinite; }
+.tpl-halloween .inv-float { filter: drop-shadow(0 0 8px color-mix(in srgb, var(--accent) 60%, transparent)); }
+
+</style>
 </head>
 <body>
 
@@ -24,10 +692,895 @@
   <div id="toast" role="status" aria-live="polite"></div>
 
   <!-- El orden importa: primero los datos, luego guardado, dibujo y por último la app. -->
-  <script src="js/config.js"></script>
-  <script src="js/catalog.js"></script>
-  <script src="js/storage.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/app.js"></script>
-</body>
-</html>
+  <script>
+/*
+ * config.js — Datos del negocio. ESTE es el archivo que tú editas.
+ *
+ *   whatsapp : el WhatsApp de Tap Nova donde te llegarán los pedidos (10 dígitos).
+ *   price    : precio por invitación publicada (número, ej. 199). Si lo dejas en null,
+ *              la pantalla dirá "precio por confirmar".
+ *   currency : moneda, normalmente 'MXN'.
+ *   payUrl   : enlace de pago (ej. un "Link de pago" de Mercado Pago o Stripe). Si está
+ *              vacío, se muestran las instrucciones de payNote.
+ *   payNote  : texto con tus datos de pago (ej. "Transferencia a CLABE ... a nombre de ...").
+ *
+ *   --- Etapa automática (se llenan al terminar la guía de Supabase) ---
+ *   supabaseUrl : la dirección de tu proyecto, ej. https://abcdefgh.supabase.co
+ *   supabaseKey : la llave PÚBLICA (anon / publishable). Es normal que sea visible; NUNCA pongas aquí la llave secreta.
+ *   Mientras estén vacías, la página usa el cobro manual (payUrl / WhatsApp).
+ *   price (arriba) solo se MUESTRA; el precio real lo fija el servidor (secreto PRICE_MXN).
+ */
+(function (global) {
+  'use strict';
+  global.TapNova = global.TapNova || {};
+  global.TapNova.Config = {
+    studioName: 'Tap Nova Studio',
+    whatsapp: '6673457524',
+    price: 89,
+    currency: 'MXN',
+    payUrl: 'https://mpago.li/2T6Ln48',
+    supabaseUrl: 'https://nvmwzbauaghpurjzobcc.supabase.co',
+    supabaseKey: 'sb_publishable_XApUw3R1rsHksQd3LDwXBg_KLVrkE75',
+    payNote: 'Paga por transferencia:\nCLABE: 722969010466377184\nBeneficiario: Abdiel Josue Jimenez Sainz\nInstitución: Mercado Pago W\nDespués de pagar, envíanos tu diseño en el paso 2.'
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/*
+ * catalog.js — Catálogo de categorías, campos y plantillas.
+ *
+ * Aquí SOLO hay datos (la "definición" de cada plantilla). Los datos de cada
+ * invitación real (nombre, fecha, foto, stickers...) viven aparte, en storage.js.
+ *
+ * Para agregar una plantilla nueva:
+ *   1. Copia un bloque de TEMPLATES y cambia id, nombre, categoría, textos, paletas.
+ *   2. "stickers" = los stickers que se ofrecen en el editor.
+ *      "startStickers" = los que ya vienen puestos (x, y en % de la portada; s tamaño; r giro).
+ *      "floaters" = adornos que flotan solos en la portada.
+ *   3. Si quieres un diseño distinto, usa un "layout" nuevo y agrega sus estilos
+ *      en css/templates.css (solo CSS, no hay que tocar el código JavaScript).
+ * Para agregar una categoría nueva: añade una línea a CATEGORIES.
+ */
+(function (global) {
+  'use strict';
+
+  const CATEGORIES = [
+    { id: 'infantil', name: 'Cumpleaños infantiles' },
+    { id: 'halloween', name: 'Halloween' },
+    { id: 'adultos', name: 'Cumpleaños de adultos' },
+    { id: 'xv', name: 'XV años' },
+    { id: 'boda', name: 'Bodas' },
+    { id: 'graduacion', name: 'Graduaciones' },
+    { id: 'bautizo', name: 'Bautizos' },
+    { id: 'comunion', name: 'Primera comunión' },
+    { id: 'aniversario', name: 'Aniversarios' },
+    { id: 'babyshower', name: 'Baby shower' }
+  ];
+
+  const FIELDS = {
+    names: { type: 'text', label: 'Nombre(s)', max: 60 },
+    motive: { type: 'text', label: 'Edad o motivo del evento', max: 50 },
+    age: { type: 'text', label: 'Número grande (edad)', max: 3, placeholder: '20', hint: 'Opcional. Se muestra en grande en esta plantilla.' },
+    date: { type: 'date', label: 'Fecha' },
+    time: { type: 'time', label: 'Hora' },
+    venue: { type: 'text', label: 'Nombre del lugar', max: 60 },
+    address: { type: 'textarea', rows: 2, label: 'Dirección', max: 160 },
+    mapsUrl: {
+      type: 'url',
+      label: 'Enlace de Google Maps',
+      placeholder: 'https://maps.app.goo.gl/...',
+      hint: 'Opcional. Si lo dejas vacío, usaremos la dirección para buscar el lugar.'
+    },
+    message: { type: 'textarea', rows: 4, label: 'Mensaje de invitación', max: 400 },
+    photo: { type: 'image', label: 'Fotografía principal' },
+    rsvpText: {
+      type: 'textarea',
+      rows: 2,
+      label: 'Mensaje de confirmación',
+      max: 140,
+      hint: 'Es el texto que se escribirá solo en el WhatsApp de tu invitado al confirmar.'
+    },
+    whatsapp: {
+      type: 'tel',
+      label: 'WhatsApp para confirmar asistencia',
+      placeholder: '10 dígitos, ej. 6671234567',
+      hint: 'Con este número se activa el botón "Confirmar asistencia".'
+    }
+  };
+
+  // Stickers que se ofrecen en todas las plantillas (después de los propios de cada una).
+  const GENERAL_STICKERS = ['⭐', '❤️', '🎈', '🎉', '✨', '🎀', '🌈', '🦋', '🌸', '🎁'];
+
+  function inDays(n) {
+    const d = new Date();
+    d.setDate(d.getDate() + n);
+    const p = (x) => String(x).padStart(2, '0');
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+  }
+
+  // Próximo 31 de octubre (este año si aún no pasa, si no el siguiente).
+  function nextHalloween() {
+    const n = new Date();
+    let y = n.getFullYear();
+    if (new Date(y, 9, 31, 23, 59).getTime() < n.getTime()) y++;
+    return y + '-10-31';
+  }
+
+  // Mismos campos para todas las plantillas de hoy; cada una cambia etiquetas y ejemplos.
+  function standardFields(namesLabel, namesPh, motivePh, venuePh, withAge) {
+    const list = [
+      { key: 'names', label: namesLabel, placeholder: namesPh },
+      { key: 'motive', placeholder: motivePh }
+    ];
+    if (withAge) list.push({ key: 'age' });
+    return list.concat([
+      { key: 'photo' },
+      { key: 'date' },
+      { key: 'time' },
+      { key: 'venue', placeholder: venuePh },
+      { key: 'address' },
+      { key: 'mapsUrl' },
+      { key: 'message' },
+      { key: 'whatsapp' },
+      { key: 'rsvpText' }
+    ]);
+  }
+
+  const SECTIONS_STD = ['hero', 'message', 'details', 'countdown', 'location', 'rsvp'];
+
+  // Variables de color de cada paleta:
+  // --bg fondo · --paper tarjetas · --ink texto · --muted texto suave · --accent color principal
+  // --accent-ink texto sobre el color principal · --accent-2 secundario · --pop-1/--pop-2 colores extra
+  const TEMPLATES = [
+    /* ---------- Estilo "papel troquelado" (como las invitaciones físicas) ---------- */
+    {
+      id: 'baby-granja',
+      name: 'Baby Shower Granja',
+      category: 'babyshower',
+      cover: null,
+      layout: 'granja',
+      kicker: 'Te invitamos a',
+      photoOptional: true,
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['☀️', '☁️', '🚜', '🐴', '🐮', '🐷', '🐑', '🤠', '🌾', '🍼', '🧸', '👶', '🐔', '🥕'],
+      startStickers: [
+        { e: '☁️', x: 70, y: 8, s: 76, r: 0 },
+        { e: '☀️', x: 83, y: 5, s: 52, r: 0 },
+        { e: '🎈', x: 24, y: 50, s: 44, r: -10 },
+        { e: '🚜', x: 24, y: 89, s: 96, r: 0 },
+        { e: '🐴', x: 52, y: 93, s: 56, r: 0 },
+        { e: '🤠', x: 72, y: 80, s: 64, r: 4 },
+        { e: '🐮', x: 83, y: 92, s: 58, r: 0 }
+      ],
+      fields: standardFields('Nombre del festejado o de los papás', 'Luis Orlando', 'Mi baby shower', 'Salón Los Girasoles'),
+      palettes: [
+        { id: 'azul', name: 'Azul', vars: { '--bg': '#EDF1F5', '--paper': '#FFFFFF', '--ink': '#5A3E2B', '--muted': '#8A7B6E', '--accent': '#5F88AE', '--accent-ink': '#FFFFFF', '--accent-2': '#D9C7A6', '--pop-1': '#A9C0D6', '--pop-2': '#CDBB9A' } },
+        { id: 'rosa', name: 'Rosa', vars: { '--bg': '#F9EEF0', '--paper': '#FFFFFF', '--ink': '#5A3A3A', '--muted': '#8F7474', '--accent': '#C9748B', '--accent-ink': '#FFFFFF', '--accent-2': '#E6C9A5', '--pop-1': '#F0B9C6', '--pop-2': '#D9C2A0' } },
+        { id: 'menta', name: 'Menta', vars: { '--bg': '#EAF3EE', '--paper': '#FFFFFF', '--ink': '#46422E', '--muted': '#7C806C', '--accent': '#5E9B80', '--accent-ink': '#FFFFFF', '--accent-2': '#E0CFA2', '--pop-1': '#A8CFBC', '--pop-2': '#D5C79B' } }
+      ],
+      defaults: () => ({
+        names: 'Luis Orlando',
+        motive: 'Mi baby shower',
+        photo: '',
+        date: inDays(30),
+        time: '16:00',
+        venue: 'Salón Los Girasoles',
+        address: 'Calle Girasol 210, Col. Jardines',
+        mapsUrl: '',
+        message: 'Estamos muy felices de compartir la llegada de nuestro pequeño vaquero. ¡Acompáñanos a celebrarlo!',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia al baby shower 🤠'
+      })
+    },
+
+    {
+      id: 'coctel-rosa',
+      name: 'Cóctel Rosa',
+      category: 'adultos',
+      cover: null,
+      layout: 'coctel',
+      kicker: 'Celebra conmigo',
+      photoOptional: true,
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['🍸', '🫒', '🍾', '🥂', '💸', '💵', '🎀', '🌟', '💅', '👠', '💄', '🍒', '🍓', '🛍️', '🪩'],
+      startStickers: [
+        { e: '🫒', x: 20, y: 9, s: 52, r: -25 },
+        { e: '⭐', x: 82, y: 11, s: 56, r: 12 },
+        { e: '🌟', x: 91, y: 20, s: 38, r: 0 },
+        { e: '💸', x: 20, y: 84, s: 62, r: -10 },
+        { e: '🍸', x: 81, y: 72, s: 88, r: 8 },
+        { e: '🎀', x: 74, y: 82, s: 42, r: 0 }
+      ],
+      fields: standardFields('Nombre de la festejada', 'Fernanda', 'Birthday', 'Terraza Aurora', true),
+      palettes: [
+        { id: 'oliva', name: 'Oliva', vars: { '--bg': '#F1F1E4', '--paper': '#FFFFFF', '--ink': '#5B3A29', '--muted': '#8C7566', '--accent': '#C0436F', '--accent-ink': '#FFFFFF', '--accent-2': '#C79A3B', '--pop-1': '#B3B88F', '--pop-2': '#F7B9CF' } },
+        { id: 'lila', name: 'Lila', vars: { '--bg': '#F4EFFA', '--paper': '#FFFFFF', '--ink': '#4B3566', '--muted': '#8574A0', '--accent': '#8E5BD1', '--accent-ink': '#FFFFFF', '--accent-2': '#E0A93B', '--pop-1': '#CDBEEA', '--pop-2': '#F6BEDD' } },
+        { id: 'cielo', name: 'Cielo', vars: { '--bg': '#EAF4F8', '--paper': '#FFFFFF', '--ink': '#2F4858', '--muted': '#6F8A99', '--accent': '#2F8FB8', '--accent-ink': '#FFFFFF', '--accent-2': '#E8A33D', '--pop-1': '#A9D4E4', '--pop-2': '#FFC9B8' } }
+      ],
+      defaults: () => ({
+        names: 'Fernanda',
+        motive: 'Birthday',
+        age: '',
+        photo: '',
+        date: inDays(24),
+        time: '20:00',
+        venue: 'Terraza Aurora',
+        address: 'Av. del Mar 900, Zona Dorada',
+        mapsUrl: '',
+        message: 'Brindemos por otro año de vida. Ven con tu mejor look, habrá música, cócteles y mucha diversión.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia al cumpleaños de Fernanda 🍸'
+      })
+    },
+
+    {
+      id: 'collage-rosa',
+      name: 'Collage Rosa',
+      category: 'infantil',
+      cover: null,
+      layout: 'collage',
+      kicker: 'Ready? Es mi',
+      nameStyle: 'ransom', // el nombre se arma con letras recortadas, una por una
+      photoOptional: true,
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['🩷', '💖', '🎀', '💎', '🩴', '👑', '🍭', '🧁', '🎂', '🦄', '💗', '🪩', '👛', '🌺', '🍓'],
+      startStickers: [
+        { e: '🩴', x: 20, y: 7, s: 64, r: -12 },
+        { e: '🩴', x: 44, y: 6, s: 64, r: 8 },
+        { e: '🩷', x: 87, y: 8, s: 58, r: 12 },
+        { e: '⭐', x: 91, y: 20, s: 44, r: 0 },
+        { e: '🌺', x: 12, y: 47, s: 44, r: 0 },
+        { e: '💎', x: 89, y: 47, s: 34, r: 0 },
+        { e: '🎀', x: 14, y: 90, s: 52, r: -10 }
+      ],
+      fields: standardFields('Nombre de la festejada', 'Alexya', "It's my birthday", 'Casa de Alexya', true),
+      palettes: [
+        { id: 'rosa', name: 'Rosa', vars: { '--bg': '#FFE9F2', '--paper': '#FFFFFF', '--ink': '#5A1F3F', '--muted': '#9A5F7F', '--accent': '#E0307F', '--accent-ink': '#FFFFFF', '--accent-2': '#FFC83D', '--pop-1': '#9A6BFF', '--pop-2': '#FFE48A' } },
+        { id: 'cielo', name: 'Cielo', vars: { '--bg': '#E5F4FF', '--paper': '#FFFFFF', '--ink': '#18365A', '--muted': '#5F7FA5', '--accent': '#1E88E5', '--accent-ink': '#FFFFFF', '--accent-2': '#FF8FB0', '--pop-1': '#26C6A6', '--pop-2': '#FFF0A8' } },
+        { id: 'lila', name: 'Lila', vars: { '--bg': '#F1E9FF', '--paper': '#FFFFFF', '--ink': '#3F2468', '--muted': '#8467B3', '--accent': '#8E4DE0', '--accent-ink': '#FFFFFF', '--accent-2': '#FFB74D', '--pop-1': '#FF5FA2', '--pop-2': '#D8F3A8' } }
+      ],
+      defaults: () => ({
+        names: 'Alexya',
+        motive: "It's my birthday",
+        age: '2',
+        photo: '',
+        date: inDays(18),
+        time: '17:00',
+        venue: 'Casa de Alexya',
+        address: 'Calle Las Rosas 45, Col. Primavera',
+        mapsUrl: '',
+        message: '¡Vamos a celebrar mi cumpleaños con globos, pastel y muchas sorpresas! Te espero.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia al cumpleaños de Alexya 💖'
+      })
+    },
+
+    {
+      id: 'halloween-noche',
+      name: 'Noche de Halloween',
+      category: 'halloween',
+      cover: null,
+      layout: 'halloween',
+      kicker: '¡Truco o trato!',
+      photoOptional: true,
+      floaters: ['🦇', '🕸️', '🎃', '👻', '🦇', '🕷️', '💀', '🍬'],
+      sections: SECTIONS_STD,
+      stickers: ['🎃', '👻', '🦇', '🕷️', '🕸️', '💀', '🧙', '🧛', '🍬', '🍭', '🌙', '🪦', '🔮', '🧟', '🕯️', '🦉'],
+      startStickers: [
+        { e: '🕸️', x: 9, y: 5, s: 78, r: 0 },
+        { e: '🎃', x: 17, y: 91, s: 76, r: -8 },
+        { e: '👻', x: 84, y: 89, s: 68, r: 8 }
+      ],
+      fields: standardFields('Título de la fiesta', 'Noche de Brujas', 'Fiesta de disfraces', 'Casa Embrujada'),
+      palettes: [
+        { id: 'calabaza', name: 'Calabaza', vars: { '--bg': '#140B24', '--paper': '#24153D', '--ink': '#FFF4E0', '--muted': '#B9A6D6', '--accent': '#FF7A1A', '--accent-ink': '#1A0B2E', '--accent-2': '#FFC83D', '--pop-1': '#9B5CFF', '--pop-2': '#5CFF8A' } },
+        { id: 'bruja', name: 'Bruja', vars: { '--bg': '#0E1A14', '--paper': '#16291F', '--ink': '#EFFFE6', '--muted': '#9FC4AC', '--accent': '#7CFF4D', '--accent-ink': '#0A1A10', '--accent-2': '#C58BFF', '--pop-1': '#FF7A1A', '--pop-2': '#FFD23F' } },
+        { id: 'fantasma', name: 'Fantasma', vars: { '--bg': '#0F1822', '--paper': '#192634', '--ink': '#F2F8FF', '--muted': '#9DB2C7', '--accent': '#9FD8FF', '--accent-ink': '#0F1822', '--accent-2': '#FF7A1A', '--pop-1': '#B28CFF', '--pop-2': '#FFE08A' } }
+      ],
+      defaults: () => ({
+        names: 'Noche de Brujas',
+        motive: 'Fiesta de disfraces',
+        photo: '',
+        date: nextHalloween(),
+        time: '20:00',
+        venue: 'Casa Embrujada',
+        address: 'Calle del Panteón 13, Col. Las Ánimas',
+        mapsUrl: '',
+        message: 'Si te atreves, ven a nuestra fiesta de Halloween: disfraces, dulces y muchos sustos. ¡Habrá premio al mejor disfraz!',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a la fiesta de Halloween 🎃'
+      })
+    },
+
+    /* ---------- Fiestas infantiles interactivas ---------- */
+    {
+      id: 'fiesta-confeti',
+      name: 'Fiesta Confeti',
+      category: 'infantil',
+      cover: null,
+      layout: 'confeti',
+      kicker: '¡Estás invitado!',
+      floaters: ['🎈', '🎉', '⭐', '🎈', '🎁', '🎈', '✨', '🎂'],
+      sections: SECTIONS_STD,
+      stickers: ['🎂', '🧁', '🍭', '🦄', '🎊', '🥳', '🪅', '🎠'],
+      startStickers: [],
+      fields: standardFields('Nombre del festejado', 'Sofía', '¡Cumplo 6 años!', 'Salón Mundo Mágico'),
+      palettes: [
+        { id: 'arcoiris', name: 'Arcoíris', vars: { '--bg': '#EAF7FF', '--paper': '#FFFFFF', '--ink': '#2B2A4C', '--muted': '#6B6A8C', '--accent': '#FF4F8B', '--accent-ink': '#FFFFFF', '--accent-2': '#FFC83D', '--pop-1': '#2FB8F0', '--pop-2': '#4CCB6A' } },
+        { id: 'chicle', name: 'Chicle', vars: { '--bg': '#FFEFF6', '--paper': '#FFFFFF', '--ink': '#4A1D45', '--muted': '#8A5C85', '--accent': '#FF4FA3', '--accent-ink': '#FFFFFF', '--accent-2': '#FFD166', '--pop-1': '#A97BFF', '--pop-2': '#2FD4B5' } },
+        { id: 'oceano', name: 'Océano', vars: { '--bg': '#E4FAF6', '--paper': '#FFFFFF', '--ink': '#0F3B4A', '--muted': '#4F7E8C', '--accent': '#00A9CE', '--accent-ink': '#FFFFFF', '--accent-2': '#FFB347', '--pop-1': '#FF6B8B', '--pop-2': '#8E7CFF' } }
+      ],
+      defaults: () => ({
+        names: 'Sofía',
+        motive: '¡Cumplo 6 años!',
+        photo: '',
+        date: inDays(21),
+        time: '16:00',
+        venue: 'Salón Mundo Mágico',
+        address: 'Av. de las Flores 123, Col. Centro',
+        mapsUrl: '',
+        message: '¡Ven a celebrar conmigo! Habrá pastel, piñata, juegos y muchas sorpresas. ¡No faltes!',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a la fiesta de Sofía 🎉'
+      })
+    },
+
+    {
+      id: 'safari-aventura',
+      name: 'Safari Aventura',
+      category: 'infantil',
+      cover: null,
+      layout: 'safari',
+      kicker: '¡Únete a la aventura!',
+      floaters: ['🦁', '🌴', '🐘', '🦒', '🐵', '🦓', '🌿', '🐯'],
+      sections: SECTIONS_STD,
+      stickers: ['🦁', '🐘', '🦒', '🐵', '🦓', '🐯', '🌴', '🌿', '🐊', '🦜', '🐍', '☀️'],
+      startStickers: [],
+      fields: standardFields('Nombre del festejado', 'Mateo', '¡Cumplo 4 años!', 'Parque La Selva'),
+      palettes: [
+        { id: 'sabana', name: 'Sabana', vars: { '--bg': '#FFF3D1', '--paper': '#FFFFFF', '--ink': '#3B2A14', '--muted': '#7C6540', '--accent': '#2E9E5B', '--accent-ink': '#FFFFFF', '--accent-2': '#FFB020', '--pop-1': '#E4572E', '--pop-2': '#8B5E34' } },
+        { id: 'selva', name: 'Selva', vars: { '--bg': '#E1F5DF', '--paper': '#FFFFFF', '--ink': '#143A25', '--muted': '#4C7A5E', '--accent': '#1F8A4C', '--accent-ink': '#FFFFFF', '--accent-2': '#FFD23F', '--pop-1': '#FF7A3D', '--pop-2': '#2BB3A3' } },
+        { id: 'atardecer', name: 'Atardecer', vars: { '--bg': '#FFE7D9', '--paper': '#FFFFFF', '--ink': '#4A1F14', '--muted': '#8C5A4A', '--accent': '#E8553D', '--accent-ink': '#FFFFFF', '--accent-2': '#FFB84D', '--pop-1': '#8E44AD', '--pop-2': '#2ECC71' } }
+      ],
+      defaults: () => ({
+        names: 'Mateo',
+        motive: '¡Cumplo 4 años!',
+        photo: '',
+        date: inDays(28),
+        time: '15:00',
+        venue: 'Parque La Selva',
+        address: 'Blvd. Los Álamos 800, Col. Jardines',
+        mapsUrl: '',
+        message: '¡Únete a mi gran aventura en la selva! Habrá juegos, sorpresas y mucho pastel. ¡Ven vestido de explorador!',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a la fiesta de Mateo 🦁'
+      })
+    },
+
+    {
+      id: 'mision-espacial',
+      name: 'Misión Espacial',
+      category: 'infantil',
+      cover: null,
+      layout: 'espacial',
+      kicker: 'Misión: ¡mi cumpleaños!',
+      floaters: ['🚀', '🪐', '⭐', '🌙', '🛸', '🌟', '☄️', '🌎'],
+      sections: SECTIONS_STD,
+      stickers: ['🚀', '🪐', '🌙', '🛸', '🌟', '☄️', '🌎', '👨‍🚀', '👽', '🌠', '🛰️'],
+      startStickers: [],
+      fields: standardFields('Nombre del astronauta', 'Leo', '¡Cumplo 7 años!', 'Centro de Eventos Galaxia'),
+      palettes: [
+        { id: 'galaxia', name: 'Galaxia', vars: { '--bg': '#101746', '--paper': '#1B2566', '--ink': '#F4F6FF', '--muted': '#AEB6E8', '--accent': '#7C5CFF', '--accent-ink': '#FFFFFF', '--accent-2': '#FFD43B', '--pop-1': '#26D0CE', '--pop-2': '#FF6FB5' } },
+        { id: 'nebulosa', name: 'Nebulosa', vars: { '--bg': '#2A1049', '--paper': '#3B1A63', '--ink': '#FBF3FF', '--muted': '#C7A9E6', '--accent': '#FF5FA2', '--accent-ink': '#FFFFFF', '--accent-2': '#FFD166', '--pop-1': '#6EE7F9', '--pop-2': '#A78BFA' } },
+        { id: 'cohete', name: 'Cohete', vars: { '--bg': '#0B2540', '--paper': '#13365C', '--ink': '#F2F8FF', '--muted': '#9BB9D6', '--accent': '#FF6B35', '--accent-ink': '#FFFFFF', '--accent-2': '#FFD23F', '--pop-1': '#4CC9F0', '--pop-2': '#80ED99' } }
+      ],
+      defaults: () => ({
+        names: 'Leo',
+        motive: '¡Cumplo 7 años!',
+        photo: '',
+        date: inDays(35),
+        time: '17:00',
+        venue: 'Centro de Eventos Galaxia',
+        address: 'Calle Orión 55, Col. Satélite',
+        mapsUrl: '',
+        message: '¡Prepárate para el despegue! Acompáñame a una misión espacial con juegos, pastel y muchas estrellas.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a la misión espacial de Leo 🚀'
+      })
+    },
+
+    /* ---------- Elegantes ---------- */
+    {
+      id: 'xv-dorado',
+      name: 'XV Dorado',
+      category: 'xv',
+      cover: null,
+      layout: 'gala',
+      kicker: 'Te invito a celebrar',
+      floaters: ['✨', '💫', '✨', '✨'],
+      sections: SECTIONS_STD,
+      stickers: ['👑', '🦋', '🌹', '💎', '👗', '🥂', '🕊️', '💫', '🌸'],
+      startStickers: [],
+      fields: standardFields('Nombre de la quinceañera', 'Valeria Ramírez', 'Mis XV años', 'Jardín Las Palmas'),
+      palettes: [
+        { id: 'medianoche', name: 'Medianoche', vars: { '--bg': '#0F1226', '--paper': '#171B38', '--ink': '#F3EBD7', '--muted': '#B7B0C9', '--accent': '#D8B65A', '--accent-ink': '#1A1530', '--accent-2': '#8F7BD6' } },
+        { id: 'vino', name: 'Vino', vars: { '--bg': '#2A0F1A', '--paper': '#3A1624', '--ink': '#F7E9E1', '--muted': '#D2AFA8', '--accent': '#E3BE7B', '--accent-ink': '#2A0F1A', '--accent-2': '#C25A74' } },
+        { id: 'esmeralda', name: 'Esmeralda', vars: { '--bg': '#0B2A24', '--paper': '#12382F', '--ink': '#F1EBDD', '--muted': '#A9C4B8', '--accent': '#D9B866', '--accent-ink': '#0B2A24', '--accent-2': '#5FB89A' } }
+      ],
+      defaults: () => ({
+        names: 'Valeria Ramírez',
+        motive: 'Mis XV años',
+        photo: '',
+        date: inDays(45),
+        time: '19:00',
+        venue: 'Jardín Las Palmas',
+        address: 'Camino Real 456, Fracc. Las Palmas',
+        mapsUrl: '',
+        message: 'Con la bendición de Dios y de mis padres, te invito a celebrar conmigo una noche inolvidable en este día tan especial.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a los XV años de Valeria ✨'
+      })
+    },
+
+    {
+      id: 'boda-lino',
+      name: 'Boda Lino',
+      category: 'boda',
+      cover: null,
+      layout: 'lino',
+      kicker: 'Con alegría los invitamos',
+      floaters: [],
+      sections: SECTIONS_STD,
+      stickers: ['💍', '🤍', '🕊️', '🌿', '🥂', '💐', '🕯️', '🌾'],
+      startStickers: [],
+      fields: standardFields('Nombres de los novios', 'Camila & Andrés', 'Nos casamos', 'Hacienda Santa Lucía'),
+      palettes: [
+        { id: 'marfil', name: 'Marfil', vars: { '--bg': '#F6F1E7', '--paper': '#FFFDF8', '--ink': '#2D2A26', '--muted': '#7B746A', '--accent': '#A8845A', '--accent-ink': '#FFFFFF', '--accent-2': '#D9C7A6' } },
+        { id: 'salvia', name: 'Salvia', vars: { '--bg': '#EEF1EA', '--paper': '#FBFCF8', '--ink': '#27322B', '--muted': '#6E7B71', '--accent': '#6F8F7A', '--accent-ink': '#FFFFFF', '--accent-2': '#C9D5C4' } },
+        { id: 'rosa', name: 'Rosa polvo', vars: { '--bg': '#F8EEEC', '--paper': '#FFFBFA', '--ink': '#3A2A2A', '--muted': '#86706F', '--accent': '#B8707A', '--accent-ink': '#FFFFFF', '--accent-2': '#E8C7C3' } }
+      ],
+      defaults: () => ({
+        names: 'Camila & Andrés',
+        motive: 'Nos casamos',
+        photo: '',
+        date: inDays(90),
+        time: '17:30',
+        venue: 'Hacienda Santa Lucía',
+        address: 'Carretera a la Presa km 8, Santa Lucía',
+        mapsUrl: '',
+        message: 'Hoy empieza nuestra historia favorita y queremos compartirla contigo. Tu presencia será nuestro mejor regalo.',
+        whatsapp: '',
+        rsvpText: 'Hola, confirmo mi asistencia a la boda de Camila y Andrés 💍'
+      })
+    }
+  ];
+
+  function getTemplate(id) {
+    return TEMPLATES.find((t) => t.id === id) || null;
+  }
+
+  function getCategory(id) {
+    return CATEGORIES.find((c) => c.id === id) || null;
+  }
+
+  // Une la definición de cada campo de la plantilla con la biblioteca FIELDS.
+  function resolveFields(tpl) {
+    return tpl.fields
+      .map((f) => {
+        const base = FIELDS[f.key];
+        return base ? Object.assign({}, base, f) : null;
+      })
+      .filter(Boolean);
+  }
+
+  // Stickers que se ofrecen en el editor: los de la plantilla y luego los generales.
+  function stickerSet(tpl) {
+    const own = tpl.stickers || [];
+    return own.concat(GENERAL_STICKERS.filter((e) => own.indexOf(e) < 0));
+  }
+
+  global.TapNova = global.TapNova || {};
+  global.TapNova.Catalog = {
+    CATEGORIES,
+    TEMPLATES,
+    FIELDS,
+    getTemplate,
+    getCategory,
+    resolveFields,
+    stickerSet
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/*
+ * storage.js — Dónde se guardan las invitaciones.
+ *
+ * VERSIÓN 1: todo se guarda en el propio teléfono o computadora de la persona
+ * (localStorage del navegador). Eso significa:
+ *   - No cuesta nada y no necesita internet ni cuentas.
+ *   - Los borradores solo existen en ESE navegador. Si borra los datos del
+ *     navegador o cambia de teléfono, se pierden.
+ *   - Un borrador NO está publicado: nadie más puede abrirlo.
+ *
+ * Este archivo es la ÚNICA parte que habrá que cambiar cuando se integre una
+ * base de datos: mientras conserve las mismas funciones, el resto de la
+ * plataforma no se entera.
+ *
+ * Estados de una invitación (campo "status"):
+ *   "draft"     → borrador guardado (lo único que existe hoy)
+ *   "published" → publicada con enlace único (reservado para una etapa futura)
+ * La "vista previa" no es un estado guardado: es solo cómo se ve el borrador
+ * dentro del editor.
+ */
+(function (global) {
+  'use strict';
+
+  const PREFIX = 'tapnova:inv:v1:';
+  const SCHEMA_VERSION = 2; // v2: agrega "stickers"
+
+  let backend;
+  let persistent = true;
+  try {
+    const probe = '__tapnova_probe__';
+    global.localStorage.setItem(probe, '1');
+    global.localStorage.removeItem(probe);
+    backend = global.localStorage;
+  } catch (e) {
+    persistent = false;
+    const mem = {};
+    backend = {
+      get length() { return Object.keys(mem).length; },
+      key: (i) => Object.keys(mem)[i] || null,
+      getItem: (k) => (k in mem ? mem[k] : null),
+      setItem: (k, v) => { mem[k] = String(v); },
+      removeItem: (k) => { delete mem[k]; }
+    };
+  }
+
+  function uid() {
+    if (global.crypto && typeof global.crypto.randomUUID === 'function') {
+      return global.crypto.randomUUID();
+    }
+    // Respaldo para navegadores viejos: UUID versión 4 armado a mano.
+    const b = new Uint8Array(16);
+    if (global.crypto && global.crypto.getRandomValues) global.crypto.getRandomValues(b);
+    else for (let i = 0; i < 16; i++) b[i] = Math.floor(Math.random() * 256);
+    b[6] = (b[6] & 0x0f) | 0x40; b[8] = (b[8] & 0x3f) | 0x80;
+    const h = Array.from(b).map((x) => x.toString(16).padStart(2, '0')).join('');
+    return h.slice(0, 8) + '-' + h.slice(8, 12) + '-' + h.slice(12, 16) + '-' + h.slice(16, 20) + '-' + h.slice(20);
+  }
+
+  function stickerId() {
+    return 's' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function now() {
+    return new Date().toISOString();
+  }
+
+  function list() {
+    const out = [];
+    for (let i = 0; i < backend.length; i++) {
+      const key = backend.key(i);
+      if (key && key.indexOf(PREFIX) === 0) {
+        try {
+          const inv = JSON.parse(backend.getItem(key));
+          if (inv && inv.id && inv.templateId) out.push(inv);
+        } catch (e) { /* registro dañado: se ignora */ }
+      }
+    }
+    return out.sort((a, b) => String(b.updatedAt).localeCompare(String(a.updatedAt)));
+  }
+
+  function get(id) {
+    try {
+      const raw = backend.getItem(PREFIX + id);
+      if (!raw) return null;
+      const inv = JSON.parse(raw);
+      if (inv && !Array.isArray(inv.stickers)) inv.stickers = []; // borradores de la versión anterior
+      return inv;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Devuelve { ok: true } o { ok: false, reason: 'quota' | 'error' }
+  function save(inv) {
+    inv.updatedAt = now();
+    try {
+      backend.setItem(PREFIX + inv.id, JSON.stringify(inv));
+      return { ok: true, persistent };
+    } catch (e) {
+      const quota = e && (e.name === 'QuotaExceededError' || e.code === 22 || e.code === 1014);
+      return { ok: false, reason: quota ? 'quota' : 'error' };
+    }
+  }
+
+  // Los stickers con los que arranca cada plantilla (copias nuevas, con su propio id).
+  function initialStickers(tpl) {
+    return (tpl.startStickers || []).map((s) => ({
+      id: stickerId(), e: s.e, x: s.x, y: s.y, s: s.s, r: s.r || 0
+    }));
+  }
+
+  // Arma una invitación NUEVA a partir de una plantilla, SIN guardarla todavía
+  // (así, si la persona solo mira una plantilla y regresa, no queda basura).
+  // defaults() devuelve un objeto nuevo cada vez, así que dos invitaciones
+  // de la misma plantilla nunca comparten datos.
+  function build(tpl) {
+    const t = now();
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      id: uid(),
+      templateId: tpl.id,
+      status: 'draft',
+      paletteId: tpl.palettes[0].id,
+      data: tpl.defaults(),
+      stickers: initialStickers(tpl),
+      publication: null, // futuro: { slug, publishedAt, expiresAt }
+      createdAt: t,
+      updatedAt: t
+    };
+  }
+
+  function duplicate(id) {
+    const src = get(id);
+    if (!src) return null;
+    const t = now();
+    const copy = JSON.parse(JSON.stringify(src)); // copia profunda: nada se comparte
+    copy.id = uid();
+    copy.status = 'draft';
+    copy.publication = null;
+    copy.createdAt = t;
+    const res = save(copy);
+    return res.ok ? copy : null;
+  }
+
+  function remove(id) {
+    backend.removeItem(PREFIX + id);
+  }
+
+  function num(v, min, max, fallback) {
+    const n = Number(v);
+    return isFinite(n) ? Math.min(max, Math.max(min, n)) : fallback;
+  }
+
+  // Limpia un pedido que llega de un archivo (es información externa: no se confía en ella).
+  // Devuelve una invitación válida y NUEVA, o null si el archivo no sirve.
+  function sanitize(raw) {
+    try {
+      if (!raw || typeof raw !== 'object') return null;
+      const src = raw.invitation && typeof raw.invitation === 'object' ? raw.invitation : raw;
+      const tpl = global.TapNova.Catalog.getTemplate(src.templateId);
+      if (!tpl) return null;
+      const base = tpl.defaults();
+      const data = {};
+      Object.keys(base).forEach((k) => {
+        const v = src.data && src.data[k];
+        if (k === 'photo') {
+          data[k] = typeof v === 'string' && v.indexOf('data:image/') === 0 && v.length < 1500000 ? v : '';
+        } else {
+          data[k] = typeof v === 'string' ? v.slice(0, 600) : base[k];
+        }
+      });
+      const palette = tpl.palettes.find((p) => p.id === src.paletteId) || tpl.palettes[0];
+      const stickers = (Array.isArray(src.stickers) ? src.stickers : []).slice(0, 16)
+        .filter((s) => s && typeof s.e === 'string' && s.e)
+        .map((s) => ({
+          id: stickerId(),
+          e: s.e.slice(0, 12),
+          x: num(s.x, -5, 105, 50),
+          y: num(s.y, -5, 105, 50),
+          s: num(s.s, 24, 160, 56),
+          r: num(s.r, -360, 360, 0)
+        }));
+      const t = now();
+      return {
+        schemaVersion: SCHEMA_VERSION, id: uid(), templateId: tpl.id, status: 'draft',
+        paletteId: palette.id, data, stickers, publication: null, createdAt: t, updatedAt: t
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  global.TapNova = global.TapNova || {};
+  global.TapNova.Storage = {
+    list, get, save, build, duplicate, remove, initialStickers, sanitize, isPersistent: () => persistent
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/*
+ * cloud.js — Conexión con el servidor (Supabase). Si config.js no tiene supabaseUrl y
+ * supabaseKey, todo esto queda apagado y la página funciona con el cobro manual.
+ */
+(function (global) {
+  'use strict';
+  const C = global.TapNova.Config || {};
+
+  function on() { return !!(C.supabaseUrl && C.supabaseKey); }
+  function base() { return String(C.supabaseUrl).replace(/\/+$/, ''); }
+  function headers(withBody) {
+    const h = { apikey: C.supabaseKey };
+    if (String(C.supabaseKey).indexOf('eyJ') === 0) h.Authorization = 'Bearer ' + C.supabaseKey;
+    if (withBody) h['Content-Type'] = 'application/json';
+    return h;
+  }
+  // Solo viaja lo necesario; el servidor vuelve a limpiarlo todo.
+  function pack(inv) {
+    return { id: inv.id, templateId: inv.templateId, paletteId: inv.paletteId, data: inv.data, stickers: inv.stickers || [] };
+  }
+
+  async function call(fn, body) {
+    const r = await fetch(base() + '/functions/v1/' + fn, { method: 'POST', headers: headers(true), body: JSON.stringify(body) });
+    let data = null;
+    try { data = await r.json(); } catch (e) { /* sin cuerpo */ }
+    if (!r.ok) { const err = new Error((data && data.error) || 'error'); err.status = r.status; throw err; }
+    return data;
+  }
+
+  async function view(query) {
+    const r = await fetch(base() + '/rest/v1/published_invitations?' + query, { headers: headers(false) });
+    if (!r.ok) throw new Error('view');
+    const rows = await r.json();
+    return rows && rows[0] ? rows[0] : null;
+  }
+
+  // Analítica anónima: solo un identificador al azar guardado en el teléfono. Nunca se envían datos de la invitación.
+  function vid() {
+    try {
+      let v = global.localStorage.getItem('tapnova:vid');
+      if (!v) { v = Math.random().toString(36).slice(2, 12) + Date.now().toString(36); global.localStorage.setItem('tapnova:vid', v); }
+      return v;
+    } catch (e) { return 'anon'; }
+  }
+  function track(name, detail) {
+    if (!on()) return;
+    try {
+      const h = headers(true); h.Prefer = 'return=minimal';
+      fetch(base() + '/rest/v1/events', { method: 'POST', headers: h, keepalive: true,
+        body: JSON.stringify({ name: String(name).slice(0, 40), vid: vid(), detail: detail ? String(detail).slice(0, 80) : null }) }).catch(() => {});
+    } catch (e) { /* la analítica nunca debe romper la página */ }
+  }
+
+  global.TapNova = global.TapNova || {};
+  global.TapNova.Cloud = {
+    track,
+    on,
+    // → { status:'pending', checkoutUrl, token } | { status:'published', slug }
+    startCheckout: (inv) => call('create-checkout', { invitation: pack(inv) }),
+    // Corrige una invitación ya publicada (necesita la clave que guardó este teléfono).
+    update: (inv) => call('update-invitation', { invitation: pack(inv), token: inv.publication && inv.publication.token }),
+    getBySlug: (slug) => /^[a-z0-9-]{1,60}$/.test(slug) ? view('slug=eq.' + encodeURIComponent(slug) + '&select=*') : Promise.resolve(null),
+    getById: (id) => /^[0-9a-f-]{36}$/i.test(id) ? view('id=eq.' + encodeURIComponent(id) + '&select=*') : Promise.resolve(null)
+  };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+  <script>
+/*
+ * render.js — Convierte (plantilla + datos + stickers de una invitación) en HTML
+ * y le da vida (confeti, globos que se revientan, stickers, cuenta regresiva).
+ *
+ * Una sola función de dibujo sirve para TODAS las plantillas: lo que cambia
+ * entre una plantilla y otra son sus textos, paletas, adornos y estilos CSS
+ * (css/templates.css), no el código.
+ *
+ * Seguridad: todo lo que escribe el usuario pasa por esc() antes de llegar al
+ * HTML, para que nadie pueda inyectar código en una invitación.
+ */
+(function (global) {
+  'use strict';
+
+  function esc(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function multiline(v) {
+    return esc(v).replace(/\n/g, '<br>');
+  }
+
+  function clamp(n, min, max) {
+    return Math.min(max, Math.max(min, n));
+  }
+
+  function parseDateTime(dateStr, timeStr) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr || '')) return null;
+    const p = dateStr.split('-').map(Number);
+    let hh = 0, mm = 0;
+    if (/^\d{2}:\d{2}$/.test(timeStr || '')) {
+      const t = timeStr.split(':').map(Number);
+      hh = t[0]; mm = t[1];
+    }
+    const dt = new Date(p[0], p[1] - 1, p[2], hh, mm, 0);
+    return isNaN(dt.getTime()) ? null : dt;
+  }
+
+  function formatDate(dateStr) {
+    const dt = parseDateTime(dateStr, '');
+    if (!dt) return '';
+    const s = dt.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  }
+
+  function formatTime(timeStr) {
+    if (!/^\d{2}:\d{2}$/.test(timeStr || '')) return '';
+    const t = timeStr.split(':').map(Number);
+    const h12 = t[0] % 12 || 12;
+    return h12 + ':' + String(t[1]).padStart(2, '0') + (t[0] < 12 ? ' a. m.' : ' p. m.');
+  }
+
+  // Solo enlaces http/https. Acepta que la persona escriba "maps.app.goo.gl/..." sin https.
+  function safeUrl(raw) {
+    let u = String(raw || '').trim();
+    if (!u) return '';
+    if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    try {
+      const url = new URL(u);
+      if ((url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.indexOf('.') > 0) {
+        return url.href;
+      }
+    } catch (e) { /* inválido */ }
+    return '';
+  }
+
+  // Números de 10 dígitos se toman como México (+52).
+  function whatsappLink(phone, text) {
+    let digits = String(phone || '').replace(/\D/g, '');
+    if (digits.length === 10) digits = '52' + digits;
+    if (digits.length < 11 || digits.length > 15) return '';
+    return 'https://wa.me/' + digits + '?text=' + encodeURIComponent(text || '');
+  }
+
+  function mapsLink(data) {
+    const direct = safeUrl(data.mapsUrl);
+    if (direct) return direct;
+    const q = [data.venue, data.address].filter(Boolean).join(' ').trim();
+    return q ? 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q) : '';
+  }
+
+  function countdownParts(targetMs, nowMs) {
+    const diff = targetMs - nowMs;
+    if (diff <= 0) return { done: true, d: 0, h: 0, m: 0, s: 0 };
+    const s = Math.floor(diff / 1000);
+    return {
+      done: false,
+      d: Math.floor(s / 86400),
+      h: Math.floor((s % 86400) / 3600),
+      m: Math.floor((s % 3600) / 60),
+      s: s % 60
+    };
+  }
+
+  const pad = (n) => String(n).padStart(2, '0');
+
+  const PLACEHOLDER_SVG =
+    '<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="38" r="17" fill="currentColor"/>' +
+    '<path d="M16 92c2-22 16-34 34-34s32 12 34 34z" fill="currentColor"/></svg>';
+
+  // Posiciones (x%, y%, tamaño px, duración s, retraso s) de los adornos flotantes.
+  const FLOAT_SLOTS = [
+    [5, 7, 34, 5.2, -1.2], [82, 5, 38, 6.1, -3.1], [4, 33, 30, 5.6, -2.2], [86, 31, 34, 4.8, -0.6],
+    [6, 58, 36, 6.4, -4.0], [84, 56, 30, 5.0, -1.8], [14, 82, 32, 5.8, -2.9], [76, 84, 36, 5.4, -3.6]
+  ];
+
+  // Stickers: cada uno es { id, e (emoji), x, y (% de la portada), s (tamaño px), r (giro °) }.
+  function stickersHtml(list) {
+    if (!Array.isArray(list) || !list.length) return '';
+    const items = list.slice(0, 16).map((st) => {
+      if (!st || typeof st.e !== 'string' || !st.e) return '';
+      const x = clamp(Number(st.x) || 0, -5, 105);
+      const y = clamp(Number(st.y) || 0, -5, 105);
+      const s = clamp(Number(st.s) || 56, 24, 160);
+      const r = clamp(Number(st.r) || 0, -360, 360);
+      return '<span class="inv-st" data-id="' + esc(st.id) + '" style="left:' + x.toFixed(1) + '%;top:' + y.toFixed(1) +
+        '%;--ss:' + s + 'p
